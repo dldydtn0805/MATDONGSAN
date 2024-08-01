@@ -58,10 +58,10 @@ function TogetherModal() {
   const {
     selectedFriend,
     setSelectedFriend,
+    selectedReviewPersonTags,
+    setSelectedReivewPersonTags,
     setSelectedFriendID,
-    계정없는친구선택,
-    계정없는친구선택수정,
-    계정없는친구ID선택수정,
+    setSelectedReviewPersonTagsID,
   } = reviewFilterStore();
   const currentPageID =
     userID === undefined ? loginAccount?.id : userID;
@@ -77,23 +77,23 @@ function TogetherModal() {
     );
     setSelectedFriendID(selectedOptions.map((option) => option.id));
   };
-  const 계정없는친구핸들러 = (event, selectedOptions) => {
-    계정없는친구선택수정(
+  const reviewPersonTagHandler = (event, selectedOptions) => {
+    setSelectedReivewPersonTags(
       selectedOptions.map((option) => option.title)
     );
-    계정없는친구ID선택수정(
+    setSelectedReviewPersonTagsID(
       selectedOptions.map((option) => option.id)
     );
-    console.log('계정없는친구를 선택했습니다!', 계정없는친구선택);
+    console.log('reviewPersonTag를 선택했습니다!', selectedReviewPersonTags);
   };
-  const [전체친구, 전체친구수정] = useState([]);
-  const [계정없는친구, 계정없는친구수정] = useState([]);
+  const [totalFriend, setTotalFriend] = useState([]);
+  const [reviewPersonTag, setReviewPersonTag] = useState([]);
   useEffect(() => {
     axios //
       .get(`${API_URL}/subscription/${currentPageID}`) // 1에서 로그인한 아이디로 수정
       .then((response) => {
         console.log('팔로워 요청 성공:', response.data);
-        전체친구수정(
+        setTotalFriend(
           response.data?.map((x) => ({
             title: x.nickname,
             id: x.id,
@@ -111,10 +111,10 @@ function TogetherModal() {
       .get(`${API_URL}/account/tag/${currentPageID}`) // 1에서 로그인한 아이디로 수정
       .then((response2) => {
         console.log('계정없는 친구 요청성공:', response2.data);
-        계정없는친구수정(
+        setReviewPersonTag(
           response2.data?.map((x) => ({ title: x.name, id: x.id }))
         );
-        console.log(계정없는친구, '계정없는친구 요청');
+        console.log(reviewPersonTag, 'reviewPersonTag 요청');
         console.log(selectedFriend, '계정있는친구 요청');
 
         // 성공 시 필요한 작업 수행
@@ -124,14 +124,14 @@ function TogetherModal() {
         // 실패 시 에러 처리
       });
   }, [refresh]);
-  console.log(전체친구, '현재 페이지의 친구목록보여주기');
+  console.log(totalFriend, '현재 페이지의 친구목록보여주기');
   return (
     <div className={styles.wrapper}>
       <div>
         <Autocomplete
           multiple
           id="tags-outlined"
-          options={전체친구}
+          options={totalFriend}
           getOptionLabel={(option) => option.title}
           size="small"
           filterSelectedOptions
@@ -214,11 +214,11 @@ function TogetherModal() {
         <Autocomplete
           multiple
           id="tags-outlined"
-          options={계정없는친구}
+          options={reviewPersonTag}
           getOptionLabel={(option) => option.title}
           size="small"
           filterSelectedOptions
-          onChange={계정없는친구핸들러}
+          onChange={reviewPersonTagHandler}
           sx={{
             width: '150px',
             '& .MuiInputBase-root': {
@@ -267,8 +267,8 @@ function TogetherModal() {
           )}
         />
         <div>
-          {계정없는친구선택.map((x, i) => (
-            <div className={styles.content} key={계정없는친구선택[i]}>
+          {selectedReviewPersonTags.map((x, i) => (
+            <div className={styles.content} key={selectedReviewPersonTags[i]}>
               <p className={styles.item}>{x}</p>
               <hr />
             </div>
@@ -277,8 +277,8 @@ function TogetherModal() {
         <Button
           type="submit"
           onClick={() => {
-            계정없는친구선택수정([]);
-            계정없는친구ID선택수정([]);
+            setSelectedReivewPersonTags([]);
+            setSelectedReviewPersonTagsID([]);
           }}
           sx={{
             color: 'black',
