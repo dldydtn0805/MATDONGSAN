@@ -7,13 +7,13 @@ const reviewFilterStore = create((set) => ({
   setUserFriend: (value) => set({ userFriend: value }),
   selectedFriend: [],
   setSelectedFriend: (value) => set({ selectedFriend: value }),
-  계정없는친구선택: [],
-  계정없는친구선택수정: (value) => set({ 계정없는친구선택: value }),
+  selectedNoAccountFriend: [],
+  setSelectedNoAccountFriend: (value) => set({ selectedNoAccountFriend: value }),
   selectedFriendID: [],
   setSelectedFriendID: (value) => set({ selectedFriendID: value }),
-  계정없는친구ID선택: [],
-  계정없는친구ID선택수정: (value) =>
-    set({ 계정없는친구ID선택: value }),
+  selectedNoAccountFriendID: [],
+  setSelectedNoAccountFriendID: (value) =>
+    set({ selectedNoAccountFriendID: value }),
   selectedStartDate: dayjs(dayjs('2024-01-01').format('YYYY-MM-DD')),
   setSelectedStartDate: (value) => set({ selectedStartDate: value }),
   selectedEndDate: dayjs(dayjs().format('YYYY-MM-DD')),

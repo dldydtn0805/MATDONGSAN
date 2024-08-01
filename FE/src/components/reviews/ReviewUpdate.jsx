@@ -32,72 +32,69 @@ function ReviewUpdate() {
   const { reviewID, restaurantID } = useParams();
   const navigate = useNavigate();
   const filteredReview = myReviewStore.find(
-    (x) => x.리뷰id === Number(reviewID)
+    (x) => x.reviewID === Number(reviewID)
   );
-  const [가게이름, 가게이름수정] = useState(filteredReview?.가게이름);
-  const [친절도, 친절도수정] = useState(filteredReview?.친절도);
-  const [맛, 맛수정] = useState(filteredReview?.맛);
-  // const [사진] = useState(filteredReview.사진);
-  const [내용, 내용수정] = useState(filteredReview?.내용);
-  const [같이간친구, 같이간친구수정] = useState(
-    filteredReview?.같이간친구.map((x) => ({
+  const [restaurantName, setRestaurantName] = useState(filteredReview?.restaurantName);
+  const [averageKindnessRating, setAverageKindnessRating] = useState(filteredReview?.averageKindnessRating);
+  const [tasteRating, setTasteRating] = useState(filteredReview?.tasteRating);
+  const [reviewContent, setReviewContent] = useState(filteredReview?.reviewContent);
+  const [accountReviews, setAccountReviews] = useState(
+    filteredReview?.accountReviews.map((x) => ({
       name: x?.nickname,
       picture: x?.picture,
     })) // 객체를 명시적으로 반환
   );
-  console.log(같이간친구, '진짜 같이간 친구임');
-  console.log(filteredReview, '진짜 같이간 친구임');
-  // 버그 난 이유 ? 기존에 같이 간 친구의 형태는 ['이름', '이름2'] 였는데 [{name:'이름', birth:'1995'}] 형태로 바뀜
-  const [임의친구이름, 임의친구이름수정] = useState('');
-  const [임의친구생년, 임의친구생년수정] = useState(
+
+  const [reviewPersonTags, setReviewPersonTags] = useState('');
+  const [reviewPersonTagsBirth, setReviewPersonTagsBirth] = useState(
     dayjs(dayjs().format('YYYY-MM-DD'))
   );
-  const [임의친구들, 임의친구들수정] = useState(
-    filteredReview?.임의친구들
+  const [selectedReviewPersonTags, setSelectedReviewPersonTags] = useState(
+    filteredReview?.selectedReviewPersonTags
   );
-  const [선택한계정친구들, 선택한계정친구들수정] = useState(
-    filteredReview?.같이간친구.map((x) => ({
+  const [selectedAccountReviews, setSelectedAccountReviews] = useState(
+    filteredReview?.accountReviews.map((x) => ({
       id: x?.id,
     }))
   );
-  const [방문날짜, 방문날짜수정] = useState(
-    dayjs(filteredReview?.방문한날짜)
+  const [visitDate, setVisitDate] = useState(
+    dayjs(filteredReview?.visitDate)
   );
-  const [전체친구, 전체친구수정] = useState([]);
+  const [totalFriends, setTotalFriends] = useState([]);
   useEffect(() => {
     axios //
       .get(`${API_URL}/subscription/${loginAccount.id}`) // 1에서 로그인한 아이디로 수정
       .then((response) => {
         console.log('팔로워 요청 성공:', response.data);
-        전체친구수정(
+        setTotalFriends(
           response.data?.map((x) => ({
             title: x.nickname,
             id: x.id,
             picture: x.picture,
           }))
         );
-        // 성공 시 필요한 작업 수행
+
       })
       .catch((error) => {
         console.error('팔로워 요청 실패:', error);
         // 실패 시 에러 처리
       });
   }, []);
-  const [클릭버튼, 클릭버튼수정] = useState(false);
+  const [clickedButton, setClickedButton] = useState(false);
   const handleAutocompleteChange = (event, selectedOptions) => {
     // 선택된 항목을 setSelectedFriend 함수의 인자로 전달
-    같이간친구수정(
+    setAccountReviews(
       selectedOptions?.map((option) => ({
         name: option.title,
         picture: option.picture,
       }))
     );
-    선택한계정친구들수정(
+    setSelectedAccountReviews(
       selectedOptions?.map((option) => ({
         id: option.id,
       }))
     );
-    console.log('같이 간 사람을 선택했습니다!', 선택한계정친구들);
+    console.log('같이 간 사람을 선택했습니다!', selectedAccountReviews);
   };
 
   return (
@@ -112,10 +109,10 @@ function ReviewUpdate() {
                 id="standard-basic"
                 variant="standard"
                 onChange={(e) => {
-                  가게이름수정(e.target.value);
-                  console.log('가게이름 입력중입니다');
+                  setRestaurantName(e.target.value);
+                  console.log('restaurantName 입력중입니다');
                 }}
-                defaultValue={가게이름}
+                defaultValue={restaurantName}
                 color="success"
                 sx={{
                   '& .MuiOutlinedInput-root': {
@@ -126,7 +123,7 @@ function ReviewUpdate() {
                 }}
               />
             ) : (
-              <div>{가게이름}</div>
+              <div>{restaurantName}</div>
             )}
 
             <CloseIcon
@@ -158,11 +155,11 @@ function ReviewUpdate() {
               </Typography>
               <Rating
                 name="simple-controlled"
-                value={친절도}
+                value={averageKindnessRating}
                 onChange={(event, newValue) => {
-                  친절도수정(Number(newValue));
-                  console.log('친절도 선택되었습니다!');
-                  console.log(친절도);
+                  setAverageKindnessRating(Number(newValue));
+                  console.log('averageKindnessRating 선택되었습니다!');
+                  console.log(averageKindnessRating);
                 }}
                 sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
               />
@@ -176,21 +173,21 @@ function ReviewUpdate() {
                 component="legend"
                 sx={{ color: 'rgba(55,55,55,0.7)' }}
               >
-                맛
+                tasteRating
               </Typography>
               <Rating
                 name="simple-controlled"
-                value={맛}
+                value={tasteRating}
                 onChange={(event, newValue) => {
-                  맛수정(Number(newValue));
-                  console.log('맛 선택되었습니다!');
-                  console.log(맛);
+                  setTasteRating(Number(newValue));
+                  console.log('tasteRating 선택되었습니다!');
+                  console.log(tasteRating);
                 }}
                 sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
               />
             </div>
           </div>
-          {맛 > 4 && 친절도 > 4 && (
+          {tasteRating > 4 && averageKindnessRating > 4 && (
             <div className={styles.angel}>
               <img src={angel} alt="" width={100} />
             </div>
@@ -201,13 +198,13 @@ function ReviewUpdate() {
             multiline
             rows={20}
             fullWidth
-            value={내용}
+            value={reviewContent}
             className={styles.textFieldStyle}
             placeholder="당신의 이야기를 남기세요...."
             onChange={(e) => {
-              내용수정(e.target.value);
-              console.log(내용);
-              console.log('내용 수정 했습니다!');
+              setReviewContent(e.target.value);
+              console.log(reviewContent);
+              console.log('reviewContent 수정 했습니다!');
             }}
             sx={{
               '& .MuiOutlinedInput-root': {
@@ -232,7 +229,7 @@ function ReviewUpdate() {
             <Autocomplete
               multiple
               id="tags-outlined"
-              options={전체친구}
+              options={totalFriends}
               getOptionLabel={(option) => option.title}
               size="small"
               filterSelectedOptions
@@ -267,7 +264,7 @@ function ReviewUpdate() {
               size="small"
               sx={{ width: '100px' }}
               onClick={() => {
-                클릭버튼수정(!클릭버튼);
+                setClickedButton(!clickedButton);
               }}
               style={{
                 backgroundColor: 'rgba(29, 177, 119, 0.7)', // 버튼의 배경색을 1db177로 설정
@@ -282,7 +279,7 @@ function ReviewUpdate() {
             </Button>
           </div>
           <div>
-            {같이간친구?.map((x, i) => (
+            {accountReviews?.map((x, i) => (
               // eslint-disable-next-line react/no-array-index-key
               <div className={styles.content} key={i}>
                 <Avatar
@@ -297,16 +294,16 @@ function ReviewUpdate() {
               </div>
             ))}
           </div>
-          {클릭버튼 ? (
+          {clickedButton ? (
             <ReviewUpdateFriendAdd
-              임의친구이름={임의친구이름}
-              임의친구이름수정={임의친구이름수정}
-              임의친구생년={임의친구생년}
-              임의친구생년수정={임의친구생년수정}
-              임의친구들={임의친구들}
-              임의친구들수정={임의친구들수정}
-              클릭버튼={클릭버튼}
-              클릭버튼수정={클릭버튼수정}
+              reviewPersonTags={reviewPersonTags}
+              setReviewPersonTags={setReviewPersonTags}
+              reviewPersonTagsBirth={reviewPersonTagsBirth}
+              setReviewPersonTagsBirth={setReviewPersonTagsBirth}
+              selectedReviewPersonTags={selectedReviewPersonTags}
+              setSelectedReviewPersonTags={setSelectedReviewPersonTags}
+              clickedButton={clickedButton}
+              setClickedButton={setClickedButton}
             />
           ) : null}
           <hr />
@@ -318,7 +315,7 @@ function ReviewUpdate() {
           </Typography>
 
           <div className={styles.tag}>
-            {임의친구들?.map((x, i) => (
+            {selectedReviewPersonTags?.map((x, i) => (
               // eslint-disable-next-line react/no-array-index-key
               <div key={i}>
                 <span className={styles.item}>{x.name}</span>
@@ -326,10 +323,10 @@ function ReviewUpdate() {
                 <span>{x.birthYear}</span>
                 <IconButton
                   onClick={() => {
-                    const 수정된임의친구들 = 임의친구들?.filter(
+                    const 수정된selectedReviewPersonTags = selectedReviewPersonTags?.filter(
                       (y) => y.name !== x.name
                     );
-                    임의친구들수정(수정된임의친구들);
+                    setSelectedReviewPersonTags(수정된selectedReviewPersonTags);
                   }}
                 >
                   <ClearIcon />
@@ -350,11 +347,11 @@ function ReviewUpdate() {
                 <DatePicker
                   size="small"
                   label="방문 날짜"
-                  value={방문날짜}
+                  value={visitDate}
                   maxDate={dayjs(dayjs().format('YYYY-MM-DD'))}
                   onChange={(newValue) => {
-                    방문날짜수정(newValue);
-                    console.log('방문 날짜 변경됨!', 방문날짜.$d);
+                    setVisitDate(newValue);
+                    console.log('방문 날짜 변경됨!', visitDate.$d);
                   }}
                   sx={{
                     margin: '10px',
@@ -385,16 +382,16 @@ function ReviewUpdate() {
             sx={{ width: '100px' }}
             onClick={() => {
               console.log(
-                `${방문날짜.$y}-${방문날짜.$M + 1 >= 10 ? 방문날짜.$M + 1 : `0${방문날짜.$M + 1}`}-${방문날짜.$D >= 10 ? 방문날짜.$D : `0${방문날짜.$D}`}`
+                `${visitDate.$y}-${visitDate.$M + 1 >= 10 ? visitDate.$M + 1 : `0${visitDate.$M + 1}`}-${visitDate.$D >= 10 ? visitDate.$D : `0${visitDate.$D}`}`
               );
               const requestData = {
-                kindnessRating: 친절도,
-                tasteRating: 맛,
-                content: 내용,
-                visitDate: `${방문날짜.$y}-${방문날짜.$M + 1 >= 10 ? 방문날짜.$M + 1 : `0${방문날짜.$M + 1}`}-${방문날짜.$D >= 10 ? 방문날짜.$D : `0${방문날짜.$D}`}`,
+                kindnessRating: averageKindnessRating,
+                tasteRating: tasteRating,
+                content: reviewContent,
+                visitDate: `${visitDate.$y}-${visitDate.$M + 1 >= 10 ? visitDate.$M + 1 : `0${visitDate.$M + 1}`}-${visitDate.$D >= 10 ? visitDate.$D : `0${visitDate.$D}`}`,
                 restaurantId: Number(restaurantID),
-                accountReviews: 선택한계정친구들,
-                reviewPersonTags: 임의친구들,
+                accountReviews: selectedAccountReviews,
+                reviewPersonTags: selectedReviewPersonTags,
               };
               setTimeout(() => {
                 setRefresh(!refresh);

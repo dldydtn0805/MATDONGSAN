@@ -23,7 +23,6 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 import dayjs from 'dayjs';
-// import EditIcon from '@mui/icons-material/Edit';
 import reviewStore from '../../stores/reviewStore';
 import styles from '../../styles/reviews/ReviewList.module.css';
 import ReviewsListSubItems from './ReviewListSubItems';
@@ -42,7 +41,6 @@ function ReviewsList() {
   const { loginAccount } = userStore();
   const navigate = useNavigate();
   const location = useLocation();
-  // 음식점 ID를 인자로 입력하면 해당 음식점으로 스크롤 이동한다
   const handleScrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -55,7 +53,6 @@ function ReviewsList() {
     refresh,
     setRefresh,
   } = reviewStore();
-  // const [페이지공개여부, 페이지공개여부수정] = useState(false); 리뷰페이지 공개여부, 이건 나중에
   const { API_URL } = urlStore();
   const { userID } = useParams();
   const {
@@ -64,14 +61,14 @@ function ReviewsList() {
     selectedEndDate,
     selectedBusinessTypes,
     selectedUserLocationID,
-    계정없는친구ID선택,
+    seledtedNoAccountFriendID,
     searchKeyWord,
     setSelectedFriendID,
     setSelectedStartDate,
     setSelectedEndDate,
     setSelectedBusinessTypes,
     setSelectedUserLocationID,
-    계정없는친구ID선택수정,
+    setSeledtedNoAccountFriendID,
     setSearchKeyWord,
   } = reviewFilterStore();
   const [reviewListSortButton1, setReviewListSortButton1] =
@@ -95,7 +92,7 @@ function ReviewsList() {
           accountReviews: selectedFriendID?.map((x) => ({
             id: Number(x),
           })),
-          reviewPersonTags: 계정없는친구ID선택.map((x) => ({
+          reviewPersonTags: seledtedNoAccountFriendID.map((x) => ({
             id: Number(x),
           })),
           restaurantFoodCategories: selectedBusinessTypes?.map(
@@ -131,10 +128,8 @@ function ReviewsList() {
             }),
             axios.get(`${API_URL}/region`),
           ]);
-        console.log(restaurantData);
         setRestaurantStore([]);
         setMyReviewStore([]);
-        console.log(restaurantData, '레스토랑데이터요청성공');
         const restaurantList = restaurantData.data?.map(
           (restaurant) => {
             const filteredRegeion = regions.data?.find(
@@ -143,7 +138,6 @@ function ReviewsList() {
             const filteredReview = reviewData?.data.filter(
               (review) => review.restaurantId === restaurant.id
             );
-            console.log(filteredReview);
             const totalKindnessRating = filteredReview?.reduce(
               (sum, review) => sum + review.kindnessRating,
               0
@@ -174,19 +168,19 @@ function ReviewsList() {
                       )
                     ).toISOString()
                   )
-                : dayjs('2000-01-01'); // 날짜갱신
+                : dayjs('2000-01-01');
             return {
               id: restaurant.id,
-              가게이름: restaurant.name,
-              위치: filteredRegeion?.district,
-              업종: restaurant?.restaurantFoodCategories
+              restaurantName: restaurant.name,
+              district: filteredRegeion?.district,
+              restaurantFoodCaregories: restaurant?.restaurantFoodCategories
                 ?.map((x) => x.name)
                 .join(' / '),
-              친절도: Math.round(averageKindnessRating),
-              맛: Math.round(averageTasteRating),
-              최근방문날짜: latestVisitDate.format('YYYY-MM-DD'),
-              방문횟수: filteredReview.length,
-              가게사진: restaurant?.thumUrl,
+              averageKindnessRating: Math.round(averageKindnessRating),
+              averageTasteRating: Math.round(averageTasteRating),
+              latestVisitDate: latestVisitDate.format('YYYY-MM-DD'),
+              visitCount: filteredReview.length,
+              thumUrl: restaurant?.thumUrl,
             };
           }
         );
@@ -197,19 +191,19 @@ function ReviewsList() {
           );
           return {
             id: review.restaurantId,
-            리뷰id: review.id,
-            가게이름: filteredRestaurant
-              ? filteredRestaurant.가게이름
-              : '', // 일치하는 음식점에서 가게 이름 가져오기
-            친절도: review.kindnessRating,
-            맛: review.tasteRating,
-            업종: filteredRestaurant ? filteredRestaurant.업종 : '', // 일치하는 음식점에서 업종 가져오기
-            내용: review.content,
-            사진: filteredRestaurant?.thumUrl,
-            같이간친구: review.accountReviews,
-            임의친구들: review.reviewPersonTags,
-            방문한날짜: review.visitDate,
-            위치: filteredRestaurant ? filteredRestaurant.위치 : '', // 일치하는 음식점에서 위치 가져오기
+            reviewID: review.id,
+            restaurantName: filteredRestaurant
+              ? filteredRestaurant.restaurantName
+              : '',
+            averageKindnessRating: review.kindnessRating,
+            averageTasteRating: review.tasteRating,
+            restaurantFoodCaregories: filteredRestaurant ? filteredRestaurant.restaurantFoodCaregories : '',
+            reviewContent: review.content,
+            thumUrl: filteredRestaurant?.thumUrl,
+            accountReviews: review.accountReviews,
+            reviewPersonTags: review.reviewPersonTags,
+            visitDate: review.visitDate,
+            district: filteredRestaurant ? filteredRestaurant.district : '',
           };
         });
         setMyReviewStore(reviewList);
@@ -229,7 +223,7 @@ function ReviewsList() {
     selectedEndDate,
     selectedBusinessTypes,
     selectedUserLocationID,
-    계정없는친구ID선택,
+    seledtedNoAccountFriendID,
     searchKeyWord,
     reviewListSortButton1,
     reviewListSortButton2,
@@ -297,7 +291,7 @@ function ReviewsList() {
                 );
                 setSelectedBusinessTypes([]);
                 setSelectedUserLocationID(undefined);
-                계정없는친구ID선택수정([]);
+                seledtedNoAccountFriendID수정([]);
                 setSearchKeyWord('');
               }}
             >
@@ -339,14 +333,14 @@ function ReviewsList() {
                   <Typography component="div">
                     <ListItemAvatar>
                       <Avatar
-                        src={restaurantStore[i]?.가게사진}
-                        alt="사진"
+                        src={restaurantStore[i]?.thumUrl}
+                        alt="thumUrl"
                       />
-                      {/* 사진 */}
+                      {/* thumUrl */}
                     </ListItemAvatar>
                     <span className={styles.itemInfo}>
                       <span className={styles.itemTitle}>
-                        {restaurantStore[i]?.가게이름}
+                        {restaurantStore[i]?.restaurantName}
                       </span>
                       <span>
                         <span>
@@ -357,33 +351,31 @@ function ReviewsList() {
                               color: 'rgba(29, 177, 119, 0.7)',
                             }}
                           />
-                          {restaurantStore[i].친절도}
+                          {restaurantStore[i].averageKindnessRating}
                         </span>
                         <span>|</span>
                         <span>
-                          맛
+                          averageTasteRating
                           <StarIcon
                             sx={{
                               fontSize: '10px',
                               color: 'rgba(29, 177, 119, 0.7)',
                             }}
                           />
-                          {restaurantStore[i].맛}
+                          {restaurantStore[i].averageTasteRating}
                         </span>
                       </span>
                     </span>
                     <span className={styles.itemInfo}>
                       <span>
-                        <span>{restaurantStore[i].위치}</span>
+                        <span>{restaurantStore[i].district}</span>
                         <span>|</span>
-                        <span>{restaurantStore[i].업종}</span>
+                        <span>{restaurantStore[i].restaurantFoodCaregories}</span>
                       </span>
                       <span>
                         <span>
-                          {restaurantStore[i].방문횟수}번 방문
+                          {restaurantStore[i].visitCount}번 방문
                         </span>
-                        {/* <span>|</span> */}
-                        {/* <span>{restaurantStore[i].최근방문날짜}</span> */}
                       </span>
                     </span>
                   </Typography>
