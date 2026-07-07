@@ -10,14 +10,14 @@ import styles from '../../styles/modals/ReviewRegistrationFriendTagModal.module.
 
 function ReviewWriteFriendAdd(props) {
   const {
-    setReviewPersonTagsName,
-    reviewPersonTagsName,
-    reviewPersonTagsBirth,
-    setReviewPersonTagsBirth,
-    reviewPersonTags,
-    setReviewPersonTags,
-    clickedButton,
-    setClickedButton,
+    임의친구이름수정,
+    임의친구이름,
+    임의친구생년,
+    임의친구생년수정,
+    임의친구들,
+    임의친구들수정,
+    클릭버튼,
+    클릭버튼수정,
   } = props;
   return (
     <div>
@@ -39,8 +39,8 @@ function ReviewWriteFriendAdd(props) {
               },
             }}
             onChange={(e) => {
-              setReviewPersonTagsName(e.target.value);
-              console.log(reviewPersonTagsName);
+              임의친구이름수정(e.target.value);
+              console.log(임의친구이름);
               console.log('임의 친구 추가중입니다');
             }}
             color="success"
@@ -79,28 +79,28 @@ function ReviewWriteFriendAdd(props) {
                     color: 'rgba(29, 177, 119, 0.5)', // 텍스트가 상단으로 이동할 때의 색상
                   },
                 }}
-                value={reviewPersonTagsBirth}
+                value={임의친구생년}
                 onChange={(newValue) => {
-                  setReviewPersonTagsBirth(newValue);
-                  if (reviewPersonTagsBirth)
-                    console.log('시작 날짜 변경됨!', reviewPersonTagsBirth.$y);
+                  임의친구생년수정(newValue);
+                  if (임의친구생년)
+                    console.log('시작 날짜 변경됨!', 임의친구생년.$y);
                 }}
               />
             </DemoContainer>
           </LocalizationProvider>
           <IconButton
             onClick={() => {
-              if (reviewPersonTagsName && reviewPersonTagsBirth) {
+              if (임의친구이름 && 임의친구생년) {
                 console.log('임의친구추가버튼이 클릭되었습니다!');
-                console.log(reviewPersonTagsName, reviewPersonTagsBirth.$y);
-                const copy = [...reviewPersonTags];
+                console.log(임의친구이름, 임의친구생년.$y);
+                const copy = [...임의친구들];
                 copy.push({
-                  name: reviewPersonTagsName,
-                  birthYear: String(reviewPersonTagsBirth.$y),
+                  name: 임의친구이름,
+                  birthYear: String(임의친구생년.$y),
                 });
-                setReviewPersonTagsName('');
-                setReviewPersonTags(copy);
-                setClickedButton(!clickedButton);
+                임의친구이름수정('');
+                임의친구들수정(copy);
+                클릭버튼수정(!클릭버튼);
               }
             }}
             sx={{
