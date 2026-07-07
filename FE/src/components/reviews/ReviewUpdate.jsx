@@ -32,44 +32,51 @@ function ReviewUpdate() {
   const { reviewID, restaurantID } = useParams();
   const navigate = useNavigate();
   const filteredReview = myReviewStore.find(
-    (x) => x.리뷰id === Number(reviewID)
+    (x) => x.reviewId === Number(reviewID)
   );
-  const [가게이름, 가게이름수정] = useState(filteredReview?.가게이름);
-  const [친절도, 친절도수정] = useState(filteredReview?.친절도);
-  const [맛, 맛수정] = useState(filteredReview?.맛);
+  const [restaurantName, setRestaurantName] = useState(
+    filteredReview?.restaurantName
+  );
+  const [kindnessRating, setKindnessRating] = useState(
+    filteredReview?.kindnessRating
+  );
+  const [tasteRating, setTasteRating] = useState(
+    filteredReview?.tasteRating
+  );
   // const [사진] = useState(filteredReview.사진);
-  const [내용, 내용수정] = useState(filteredReview?.내용);
-  const [같이간친구, 같이간친구수정] = useState(
-    filteredReview?.같이간친구.map((x) => ({
+  const [reviewContent, setReviewContent] = useState(
+    filteredReview?.content
+  );
+  const [companionFriends, setCompanionFriends] = useState(
+    filteredReview?.companionFriends.map((x) => ({
       name: x?.nickname,
       picture: x?.picture,
     })) // 객체를 명시적으로 반환
   );
-  console.log(같이간친구, '진짜 같이간 친구임');
-  console.log(filteredReview, '진짜 같이간 친구임');
+
   // 버그 난 이유 ? 기존에 같이 간 친구의 형태는 ['이름', '이름2'] 였는데 [{name:'이름', birth:'1995'}] 형태로 바뀜
-  const [임의친구이름, 임의친구이름수정] = useState('');
-  const [임의친구생년, 임의친구생년수정] = useState(
+  const [guestFriendName, setGuestFriendName] = useState('');
+  const [guestFriendBirthYear, setGuestFriendBirthYear] = useState(
     dayjs(dayjs().format('YYYY-MM-DD'))
   );
-  const [임의친구들, 임의친구들수정] = useState(
-    filteredReview?.임의친구들
+  const [guestFriends, setGuestFriends] = useState(
+    filteredReview?.guestFriends
   );
-  const [선택한계정친구들, 선택한계정친구들수정] = useState(
-    filteredReview?.같이간친구.map((x) => ({
-      id: x?.id,
-    }))
+  const [selectedAccountFriends, setSelectedAccountFriends] =
+    useState(
+      filteredReview?.companionFriends.map((x) => ({
+        id: x?.id,
+      }))
+    );
+  const [selectedVisitDate, setSelectedVisitDate] = useState(
+    dayjs(filteredReview?.visitDate)
   );
-  const [방문날짜, 방문날짜수정] = useState(
-    dayjs(filteredReview?.방문한날짜)
-  );
-  const [전체친구, 전체친구수정] = useState([]);
+  const [allFriends, setAllFriends] = useState([]);
   useEffect(() => {
     axios //
       .get(`${API_URL}/subscription/${loginAccount.id}`) // 1에서 로그인한 아이디로 수정
       .then((response) => {
-        console.log('팔로워 요청 성공:', response.data);
-        전체친구수정(
+        setAllFriends(
           response.data?.map((x) => ({
             title: x.nickname,
             id: x.id,
@@ -78,26 +85,23 @@ function ReviewUpdate() {
         );
         // 성공 시 필요한 작업 수행
       })
-      .catch((error) => {
-        console.error('팔로워 요청 실패:', error);
-        // 실패 시 에러 처리
-      });
+      .catch(() => undefined);
   }, []);
-  const [클릭버튼, 클릭버튼수정] = useState(false);
+  const [isGuestFriendModalOpen, setIsGuestFriendModalOpen] =
+    useState(false);
   const handleAutocompleteChange = (event, selectedOptions) => {
     // 선택된 항목을 setSelectedFriend 함수의 인자로 전달
-    같이간친구수정(
+    setCompanionFriends(
       selectedOptions?.map((option) => ({
         name: option.title,
         picture: option.picture,
       }))
     );
-    선택한계정친구들수정(
+    setSelectedAccountFriends(
       selectedOptions?.map((option) => ({
         id: option.id,
       }))
     );
-    console.log('같이 간 사람을 선택했습니다!', 선택한계정친구들);
   };
 
   return (
@@ -112,10 +116,9 @@ function ReviewUpdate() {
                 id="standard-basic"
                 variant="standard"
                 onChange={(e) => {
-                  가게이름수정(e.target.value);
-                  console.log('가게이름 입력중입니다');
+                  setRestaurantName(e.target.value);
                 }}
-                defaultValue={가게이름}
+                defaultValue={restaurantName}
                 color="success"
                 sx={{
                   '& .MuiOutlinedInput-root': {
@@ -126,7 +129,7 @@ function ReviewUpdate() {
                 }}
               />
             ) : (
-              <div>{가게이름}</div>
+              <div>{restaurantName}</div>
             )}
 
             <CloseIcon
@@ -147,8 +150,8 @@ function ReviewUpdate() {
           <hr />
           <div className={styles.rating}>
             {/* <div>
-            <img src={employee} alt="" width={50} />
-          </div> */}
+                 <img src={employee} alt="" width={50} />
+                 </div> */}
             <div>
               <Typography
                 component="legend"
@@ -158,11 +161,9 @@ function ReviewUpdate() {
               </Typography>
               <Rating
                 name="simple-controlled"
-                value={친절도}
+                value={kindnessRating}
                 onChange={(event, newValue) => {
-                  친절도수정(Number(newValue));
-                  console.log('친절도 선택되었습니다!');
-                  console.log(친절도);
+                  setKindnessRating(Number(newValue));
                 }}
                 sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
               />
@@ -180,34 +181,31 @@ function ReviewUpdate() {
               </Typography>
               <Rating
                 name="simple-controlled"
-                value={맛}
+                value={tasteRating}
                 onChange={(event, newValue) => {
-                  맛수정(Number(newValue));
-                  console.log('맛 선택되었습니다!');
-                  console.log(맛);
+                  setTasteRating(Number(newValue));
                 }}
                 sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
               />
             </div>
           </div>
-          {맛 > 4 && 친절도 > 4 && (
+          {tasteRating > 4 && kindnessRating > 4 && (
             <div className={styles.angel}>
               <img src={angel} alt="" width={100} />
             </div>
           )}
+
           <TextField
             id="outlined-multiline-static"
             label=""
             multiline
             rows={20}
             fullWidth
-            value={내용}
+            value={reviewContent}
             className={styles.textFieldStyle}
             placeholder="당신의 이야기를 남기세요...."
             onChange={(e) => {
-              내용수정(e.target.value);
-              console.log(내용);
-              console.log('내용 수정 했습니다!');
+              setReviewContent(e.target.value);
             }}
             sx={{
               '& .MuiOutlinedInput-root': {
@@ -221,6 +219,7 @@ function ReviewUpdate() {
               },
             }}
           />
+
           <hr />
           <Typography
             component="legend"
@@ -232,7 +231,7 @@ function ReviewUpdate() {
             <Autocomplete
               multiple
               id="tags-outlined"
-              options={전체친구}
+              options={allFriends}
               getOptionLabel={(option) => option.title}
               size="small"
               filterSelectedOptions
@@ -261,13 +260,14 @@ function ReviewUpdate() {
                 />
               )}
             />
+
             <Button
               type="button"
               variant="contained"
               size="small"
               sx={{ width: '100px' }}
               onClick={() => {
-                클릭버튼수정(!클릭버튼);
+                setIsGuestFriendModalOpen(!isGuestFriendModalOpen);
               }}
               style={{
                 backgroundColor: 'rgba(29, 177, 119, 0.7)', // 버튼의 배경색을 1db177로 설정
@@ -282,7 +282,7 @@ function ReviewUpdate() {
             </Button>
           </div>
           <div>
-            {같이간친구?.map((x, i) => (
+            {companionFriends?.map((x, i) => (
               // eslint-disable-next-line react/no-array-index-key
               <div className={styles.content} key={i}>
                 <Avatar
@@ -292,21 +292,22 @@ function ReviewUpdate() {
                     backgroundColor: 'rgba(29, 177, 119, 0.3)',
                   }}
                 />
+
                 <p className={styles.item}>{x.name}</p>
                 <hr />
               </div>
             ))}
           </div>
-          {클릭버튼 ? (
+          {isGuestFriendModalOpen ? (
             <ReviewUpdateFriendAdd
-              임의친구이름={임의친구이름}
-              임의친구이름수정={임의친구이름수정}
-              임의친구생년={임의친구생년}
-              임의친구생년수정={임의친구생년수정}
-              임의친구들={임의친구들}
-              임의친구들수정={임의친구들수정}
-              클릭버튼={클릭버튼}
-              클릭버튼수정={클릭버튼수정}
+              임의친구이름={guestFriendName}
+              임의친구이름수정={setGuestFriendName}
+              임의친구생년={guestFriendBirthYear}
+              임의친구생년수정={setGuestFriendBirthYear}
+              임의친구들={guestFriends}
+              임의친구들수정={setGuestFriends}
+              클릭버튼={isGuestFriendModalOpen}
+              클릭버튼수정={setIsGuestFriendModalOpen}
             />
           ) : null}
           <hr />
@@ -318,7 +319,7 @@ function ReviewUpdate() {
           </Typography>
 
           <div className={styles.tag}>
-            {임의친구들?.map((x, i) => (
+            {guestFriends?.map((x, i) => (
               // eslint-disable-next-line react/no-array-index-key
               <div key={i}>
                 <span className={styles.item}>{x.name}</span>
@@ -326,10 +327,10 @@ function ReviewUpdate() {
                 <span>{x.birthYear}</span>
                 <IconButton
                   onClick={() => {
-                    const 수정된임의친구들 = 임의친구들?.filter(
+                    const updatedGuestFriends = guestFriends?.filter(
                       (y) => y.name !== x.name
                     );
-                    임의친구들수정(수정된임의친구들);
+                    setGuestFriends(updatedGuestFriends);
                   }}
                 >
                   <ClearIcon />
@@ -350,11 +351,10 @@ function ReviewUpdate() {
                 <DatePicker
                   size="small"
                   label="방문 날짜"
-                  value={방문날짜}
+                  value={selectedVisitDate}
                   maxDate={dayjs(dayjs().format('YYYY-MM-DD'))}
                   onChange={(newValue) => {
-                    방문날짜수정(newValue);
-                    console.log('방문 날짜 변경됨!', 방문날짜.$d);
+                    setSelectedVisitDate(newValue);
                   }}
                   sx={{
                     margin: '10px',
@@ -384,17 +384,14 @@ function ReviewUpdate() {
             size="large"
             sx={{ width: '100px' }}
             onClick={() => {
-              console.log(
-                `${방문날짜.$y}-${방문날짜.$M + 1 >= 10 ? 방문날짜.$M + 1 : `0${방문날짜.$M + 1}`}-${방문날짜.$D >= 10 ? 방문날짜.$D : `0${방문날짜.$D}`}`
-              );
               const requestData = {
-                kindnessRating: 친절도,
-                tasteRating: 맛,
-                content: 내용,
-                visitDate: `${방문날짜.$y}-${방문날짜.$M + 1 >= 10 ? 방문날짜.$M + 1 : `0${방문날짜.$M + 1}`}-${방문날짜.$D >= 10 ? 방문날짜.$D : `0${방문날짜.$D}`}`,
+                kindnessRating,
+                tasteRating,
+                content: reviewContent,
+                visitDate: `${selectedVisitDate.$y}-${selectedVisitDate.$M + 1 >= 10 ? selectedVisitDate.$M + 1 : `0${selectedVisitDate.$M + 1}`}-${selectedVisitDate.$D >= 10 ? selectedVisitDate.$D : `0${selectedVisitDate.$D}`}`,
                 restaurantId: Number(restaurantID),
-                accountReviews: 선택한계정친구들,
-                reviewPersonTags: 임의친구들,
+                accountReviews: selectedAccountFriends,
+                reviewPersonTags: guestFriends,
               };
               setTimeout(() => {
                 setRefresh(!refresh);
@@ -403,8 +400,7 @@ function ReviewUpdate() {
               const url = `${API_URL}/review/${loginAccount.id}/${reviewID}`;
               axios // 여기서 put 요청으로 수정해야함
                 .put(url, requestData)
-                .then((response) => {
-                  console.log('요청 성공:', response.data);
+                .then(() => {
                   // 성공 시 필요한 작업 수행
                   Swal.fire({
                     title: '저장 완료!',
@@ -414,8 +410,7 @@ function ReviewUpdate() {
                     confirmButtonColor: '#1db177',
                   });
                 })
-                .catch((error) => {
-                  console.error('요청 실패:', error);
+                .catch(() => {
                   // 실패 시 에러 처리
                   Swal.fire({
                     title: '저장 실패!',

@@ -55,19 +55,19 @@ function ReviewListSubItems(props) {
           <List>
             {filteredSubItems?.map((x, i) => (
               <ListItem
-                key={[filteredSubItems[i].리뷰id]}
-                className={`${styles.container} ${x.리뷰id === selectedListItem ? styles.selected : ''}`}
+                key={[filteredSubItems[i].reviewId]}
+                className={`${styles.container} ${x.reviewId === selectedListItem ? styles.selected : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log(x.리뷰id, '번 상세페이지 클릭했음!');
-                  navigate(`reviews/${x.리뷰id}`);
-                  setSelectedListItem(x.리뷰id);
+
+                  navigate(`reviews/${x.reviewId}`);
+                  setSelectedListItem(x.reviewId);
                 }}
               >
                 <ListItemAvatar>
                   <Avatar
                     alt="사진"
-                    src={`/assets/random/profile${x.같이간친구[0]?.picture}.png`}
+                    src={`/assets/random/profile${x.companionFriends[0]?.picture}.png`}
                   />
                 </ListItemAvatar>
                 <ListItemText
@@ -76,17 +76,17 @@ function ReviewListSubItems(props) {
                     <Typography component="div">
                       <span className={styles.content}>
                         <span>
-                          {x.내용.length > 10
-                            ? `${x.내용.substring(0, 10)}...`
-                            : x.내용}
+                          {x.content.length > 10
+                            ? `${x.content.substring(0, 10)}...`
+                            : x.content}
                         </span>
                         <span>
-                          {dayjs(x.방문한날짜).format('YYYY-MM-DD')}
+                          {dayjs(x.visitDate).format('YYYY-MM-DD')}
                         </span>
                       </span>
                       <span className={styles.info}>
-                        {x.같이간친구?.map((z, zI) =>
-                          zI < x.같이간친구.length - 1 ? (
+                        {x.companionFriends?.map((z, zI) =>
+                          zI < x.companionFriends.length - 1 ? (
                             <span key={z.nickname}>
                               {z.nickname}
                               <span style={{ margin: '0 2px' }}>
@@ -97,10 +97,13 @@ function ReviewListSubItems(props) {
                             <span key={z.nickname}>{z.nickname}</span>
                           )
                         )}
-                        {x.같이간친구.length > 0 &&
-                          x.임의친구들.length > 0 && <span> | </span>}
-                        {x.임의친구들?.map((y, yI) =>
-                          yI < x.임의친구들.length - 1 ? (
+                        {x.companionFriends.length > 0 &&
+                          x.guestFriends.length > 0 && (
+                            <span> | </span>
+                          )}
+
+                        {x.guestFriends?.map((y, yI) =>
+                          yI < x.guestFriends.length - 1 ? (
                             <span key={y.name}>{y.name} | </span>
                           ) : (
                             <span key={y.name}>{y.name}</span>
@@ -128,6 +131,7 @@ function ReviewListSubItems(props) {
                 color: 'rgba(55,55,55,0.7)',
               }}
             />
+
             {/* </IconButton> */}
           </div>
         </div>

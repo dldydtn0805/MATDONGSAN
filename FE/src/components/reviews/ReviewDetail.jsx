@@ -25,9 +25,9 @@ function ReviewDetail() {
   const navigate = useNavigate();
   const { reviewID, restaurantID } = useParams();
   const filteredReview = myReviewStore.find(
-    (x) => x.리뷰id === Number(reviewID)
+    (x) => x.reviewId === Number(reviewID)
   );
-  console.log(filteredReview?.같이간친구);
+
   const handleDelete = () => {
     Swal.fire({
       title: '정말로 삭제하시겠습니까?',
@@ -44,17 +44,13 @@ function ReviewDetail() {
         const url = `${API_URL}/review/${loginAccount.id}/${reviewID}`;
         axios
           .delete(url)
-          .then((response) => {
-            console.log('요청 성공:', response.data);
+          .then(() => {
             navigate(`/main/restaurants/${restaurantID}`);
             setTimeout(() => {
               setRefresh(!refresh);
             }, 5);
           })
-          .catch((error) => {
-            console.error('요청 실패:', error);
-            // 실패 시 에러 처리
-          });
+          .catch(() => undefined);
         Swal.fire({
           title: '삭제가 완료되었습니다!',
           text: '성공적으로 삭제하였습니다.',
@@ -83,17 +79,18 @@ function ReviewDetail() {
               },
             }}
           />
+
           <Typography
             component="legend"
             sx={{ color: 'rgba(55,55,55,0.7)', fontSize: '25px' }}
           >
-            {filteredReview?.가게이름}
+            {filteredReview?.restaurantName}
           </Typography>
           <Typography
             component="legend"
             sx={{ color: 'rgba(55,55,55,0.7)' }}
           >
-            {filteredReview?.업종}
+            {filteredReview?.category}
           </Typography>
         </div>
         <hr />
@@ -106,7 +103,7 @@ function ReviewDetail() {
           </Typography>
           <Rating
             name="read-only"
-            value={Number(filteredReview?.친절도)}
+            value={Number(filteredReview?.kindnessRating)}
             readOnly
             sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
           />
@@ -120,7 +117,7 @@ function ReviewDetail() {
           </Typography>
           <Rating
             name="read-only"
-            value={Number(filteredReview?.맛)}
+            value={Number(filteredReview?.tasteRating)}
             readOnly
             sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
           />
@@ -141,7 +138,7 @@ function ReviewDetail() {
         >
           <TextField
             readOnly
-            value={filteredReview?.내용}
+            value={filteredReview?.content}
             multiline
             color="success"
             underline="none"
@@ -174,7 +171,7 @@ function ReviewDetail() {
         >
           같이 간 친구
         </Typography>
-        {filteredReview?.같이간친구.map((x, i) => (
+        {filteredReview?.companionFriends.map((x, i) => (
           // eslint-disable-next-line react/no-array-index-key
           <div className={styles.asideContent} key={i}>
             <Avatar
@@ -182,6 +179,7 @@ function ReviewDetail() {
               src={`/assets/random/profile${x.picture}.png`}
               sx={{ backgroundColor: 'rgba(29, 177, 119, 0.3)' }}
             />
+
             <p className={styles.asideItem}>{x.nickname}</p>
             <hr />
           </div>
@@ -193,7 +191,7 @@ function ReviewDetail() {
         >
           임의 친구들
         </Typography>
-        {filteredReview?.임의친구들.map((x) => (
+        {filteredReview?.guestFriends.map((x) => (
           <div key={x.name}>{x.name}</div>
         ))}
         <hr />
@@ -204,7 +202,7 @@ function ReviewDetail() {
           방문한 날짜
         </Typography>
         <div>
-          {dayjs(filteredReview?.방문한날짜).format('YYYY-MM-DD')}
+          {dayjs(filteredReview?.visitDate).format('YYYY-MM-DD')}
         </div>
         <hr />
         {isMyPage && (
@@ -215,7 +213,6 @@ function ReviewDetail() {
               size="large"
               sx={{ width: '130px' }}
               onClick={() => {
-                console.log('수정하기 버튼이 눌렸어요!.');
                 navigate('update');
               }}
               style={{

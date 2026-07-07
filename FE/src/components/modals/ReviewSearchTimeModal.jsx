@@ -60,7 +60,6 @@ function TimeModal() {
             maxDate={dayjs(dayjs().format('YYYY-MM-DD'))}
             onChange={(newValue) => {
               setSelectedStartDate(newValue);
-              console.log('시작 날짜 변경됨!', selectedStartDate.$d);
             }}
             sx={{
               width: '10vw',
@@ -74,6 +73,7 @@ function TimeModal() {
               },
             }}
           />
+
           <DatePicker
             label="종료 날짜"
             value={selectedEndDate}
@@ -81,7 +81,6 @@ function TimeModal() {
             maxDate={dayjs(dayjs().format('YYYY-MM-DD'))}
             onChange={(newValue) => {
               setSelectedEndDate(newValue);
-              console.log('종료 날짜 변경됨!', selectedEndDate.$d);
             }}
             sx={{
               width: '10vw',

@@ -47,7 +47,6 @@ function EditProfile() {
   const handleButtonClick = (buttonValue) => {
     setSelectedButton(buttonValue);
     setSpicyLevel(buttonValue);
-    console.log('매운 맛:', spicyLevel);
   };
   const [userData, setUserData] = useState(null);
   const [selectedButtons, setSelectedButtons] = useState([]);
@@ -75,7 +74,6 @@ function EditProfile() {
       setSelectedButtons([...selectedButtons, buttonValue]);
       setAllergy([...selectedButtons, buttonValue]);
     }
-    console.log('알레르기:', allergy);
   };
 
   useEffect(() => {
@@ -90,7 +88,7 @@ function EditProfile() {
             'Content-Type': 'application/json',
           },
         });
-        console.log('회원정보 요청 성공:', response.data);
+
         setUserData(response.data); // 받아온 회원 정보를 상태에 저장
         // userData.spicyLevel로 selectedButton 설정
         setSelectedButton(response.data.spicyLevel);
@@ -101,26 +99,20 @@ function EditProfile() {
         );
         setSelectedButtons(bannedFoodIds);
         setNickname(response.data.nickname);
-        console.log('받아온 알레르기??', [bannedFoodIds]);
+
         setProfile(response.data.picture);
         // 프로필주소 설정
         setProfileUrl(
           `/assets/random/profile${response.data.picture}.png`
         );
-        console.log(
-          `/assets/random/profile${response.data.picture}.png`
-        );
-      } catch (error) {
-        console.error('회원정보 요청 실패:', error);
-        console.log(accessToken);
-        // 실패 시 에러 처리
+      } catch {
+        setUserData(null);
       }
     };
     getUserData();
   }, [API_URL, accessToken]);
 
   const editProfileData = () => {
-    console.log(accessToken, '액세스토큰임!');
     const requestData = {
       nickname,
       birthYear: userData.birthYear,
@@ -137,49 +129,7 @@ function EditProfile() {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
-    })
-      .then((response) => {
-        console.log('회원가입 정보 수정 성공:', response.data);
-        // 성공 시 필요한 작업 수행
-        console.log(
-          '닉네임:',
-          nickname,
-          ', 태어난연도:',
-          userData.birthYear,
-          ', 성별:',
-          userData.gender,
-          ', 관심지역:',
-          userData.regions[userData.regions.length - 1].id,
-          ', 프로필:',
-          profile,
-          ', 매운맛:',
-          spicyLevel,
-          ', 알레르기:',
-          allergy
-        );
-      })
-      .catch((error) => {
-        console.error('회원가입 정보 수정 실패:', error);
-        console.log(accessToken);
-        console.log('프로필:', profile);
-        console.log(
-          '닉네임:',
-          nickname,
-          ', 태어난연도:',
-          userData.birthYear,
-          ', 성별:',
-          userData.gender,
-          ', 관심지역:',
-          userData.regions[userData.regions.length - 1].id,
-          ', 프로필:',
-          profile,
-          ', 매운맛:',
-          spicyLevel,
-          ', 알레르기:',
-          allergy
-        );
-        // 실패 시 에러 처리
-      });
+    }).catch(() => undefined);
   };
 
   return (
@@ -202,12 +152,6 @@ function EditProfile() {
                   // placeholder={userData.nickname}
                   onChange={(e) => {
                     setNickname(e.target.value);
-                    console.log(
-                      '실시간으로 바뀌는 중 nickname:',
-                      nickname,
-                      ', 현황 알레르기:',
-                      allergy
-                    );
                   }}
                   className={styles.nicknameInput}
                 />
@@ -230,10 +174,10 @@ function EditProfile() {
                 </div>
                 {/* 프로필: {userData.picture} */}
                 {/* <input
-                  name="imgUpload"
-                  type="file"
-                  accept="image/*"
-                  onChange={onChangeImage}
+                 name="imgUpload"
+                 type="file"
+                 accept="image/*"
+                 onChange={onChangeImage}
                 /> */}
               </div>
             </div>
@@ -335,6 +279,7 @@ function EditProfile() {
                           alt="pepperImg"
                           className={styles.twopepperImg}
                         />
+
                         <img
                           src={pepperImg}
                           alt="pepperImg"
@@ -370,6 +315,7 @@ function EditProfile() {
                       alt="beaf"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>소고기</div>
                   </button>
                   <button
@@ -390,6 +336,7 @@ function EditProfile() {
                       alt="pork"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>돼지고기</div>
                   </button>
                   <button
@@ -410,6 +357,7 @@ function EditProfile() {
                       alt="chicken"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>닭고기</div>
                   </button>
                   <button
@@ -430,6 +378,7 @@ function EditProfile() {
                       alt="egg"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>난류</div>
                   </button>
                   <button
@@ -450,6 +399,7 @@ function EditProfile() {
                       alt="shrimp"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>새우</div>
                   </button>
                   <button
@@ -470,6 +420,7 @@ function EditProfile() {
                       alt="crab"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>게</div>
                   </button>
                   <button
@@ -490,6 +441,7 @@ function EditProfile() {
                       alt="squid"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>오징어</div>
                   </button>
                   <button
@@ -511,6 +463,7 @@ function EditProfile() {
                       alt="mackerel"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>고등어</div>
                   </button>
                   <button
@@ -532,6 +485,7 @@ function EditProfile() {
                       alt="shellfish"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>조개류</div>
                   </button>
                   <button
@@ -553,6 +507,7 @@ function EditProfile() {
                       alt="milk"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>우유</div>
                   </button>
                   <button
@@ -573,6 +528,7 @@ function EditProfile() {
                       alt="peanut"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>땅콩</div>
                   </button>
                   <button
@@ -593,6 +549,7 @@ function EditProfile() {
                       alt="walnut"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>호두</div>
                   </button>
                   <button
@@ -613,6 +570,7 @@ function EditProfile() {
                       alt="pinenut"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>잣</div>
                   </button>
                   <button
@@ -634,6 +592,7 @@ function EditProfile() {
                       alt="soybean"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>대두</div>
                   </button>
                   <button
@@ -654,6 +613,7 @@ function EditProfile() {
                       alt="peach"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>복숭아</div>
                   </button>
                   <button
@@ -674,6 +634,7 @@ function EditProfile() {
                       alt="tomato"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>토마토</div>
                   </button>
                   <button
@@ -694,6 +655,7 @@ function EditProfile() {
                       alt="wheat"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>밀</div>
                   </button>
                   <button
@@ -714,6 +676,7 @@ function EditProfile() {
                       alt="buckwheat"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>메밀</div>
                   </button>
                   <button
@@ -734,6 +697,7 @@ function EditProfile() {
                       alt="wine"
                       className={styles.allergyImg}
                     />
+
                     <div className={styles.allergyName}>아황산류</div>
                   </button>
 

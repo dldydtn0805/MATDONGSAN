@@ -64,14 +64,14 @@ function ReviewsList() {
     selectedEndDate,
     selectedBusinessTypes,
     selectedUserLocationID,
-    계정없는친구ID선택,
+    selectedGuestFriendIds,
     searchKeyWord,
     setSelectedFriendID,
     setSelectedStartDate,
     setSelectedEndDate,
     setSelectedBusinessTypes,
     setSelectedUserLocationID,
-    계정없는친구ID선택수정,
+    setSelectedGuestFriendIds,
     setSearchKeyWord,
   } = reviewFilterStore();
   const [reviewListSortButton1, setReviewListSortButton1] =
@@ -95,7 +95,7 @@ function ReviewsList() {
           accountReviews: selectedFriendID?.map((x) => ({
             id: Number(x),
           })),
-          reviewPersonTags: 계정없는친구ID선택.map((x) => ({
+          reviewPersonTags: selectedGuestFriendIds.map((x) => ({
             id: Number(x),
           })),
           restaurantFoodCategories: selectedBusinessTypes?.map(
@@ -131,10 +131,10 @@ function ReviewsList() {
             }),
             axios.get(`${API_URL}/region`),
           ]);
-        console.log(restaurantData);
+
         setRestaurantStore([]);
         setMyReviewStore([]);
-        console.log(restaurantData, '레스토랑데이터요청성공');
+
         const restaurantList = restaurantData.data?.map(
           (restaurant) => {
             const filteredRegeion = regions.data?.find(
@@ -143,7 +143,7 @@ function ReviewsList() {
             const filteredReview = reviewData?.data.filter(
               (review) => review.restaurantId === restaurant.id
             );
-            console.log(filteredReview);
+
             const totalKindnessRating = filteredReview?.reduce(
               (sum, review) => sum + review.kindnessRating,
               0
@@ -177,16 +177,16 @@ function ReviewsList() {
                 : dayjs('2000-01-01'); // 날짜갱신
             return {
               id: restaurant.id,
-              가게이름: restaurant.name,
-              위치: filteredRegeion?.district,
-              업종: restaurant?.restaurantFoodCategories
+              restaurantName: restaurant.name,
+              locationName: filteredRegeion?.district,
+              category: restaurant?.restaurantFoodCategories
                 ?.map((x) => x.name)
                 .join(' / '),
-              친절도: Math.round(averageKindnessRating),
-              맛: Math.round(averageTasteRating),
-              최근방문날짜: latestVisitDate.format('YYYY-MM-DD'),
-              방문횟수: filteredReview.length,
-              가게사진: restaurant?.thumUrl,
+              kindnessRating: Math.round(averageKindnessRating),
+              tasteRating: Math.round(averageTasteRating),
+              recentVisitDate: latestVisitDate.format('YYYY-MM-DD'),
+              visitCount: filteredReview.length,
+              restaurantImage: restaurant?.thumUrl,
             };
           }
         );
@@ -197,27 +197,32 @@ function ReviewsList() {
           );
           return {
             id: review.restaurantId,
-            리뷰id: review.id,
-            가게이름: filteredRestaurant
-              ? filteredRestaurant.가게이름
+            reviewId: review.id,
+            restaurantName: filteredRestaurant
+              ? filteredRestaurant.restaurantName
               : '', // 일치하는 음식점에서 가게 이름 가져오기
-            친절도: review.kindnessRating,
-            맛: review.tasteRating,
-            업종: filteredRestaurant ? filteredRestaurant.업종 : '', // 일치하는 음식점에서 업종 가져오기
-            내용: review.content,
-            사진: filteredRestaurant?.thumUrl,
-            같이간친구: review.accountReviews,
-            임의친구들: review.reviewPersonTags,
-            방문한날짜: review.visitDate,
-            위치: filteredRestaurant ? filteredRestaurant.위치 : '', // 일치하는 음식점에서 위치 가져오기
+            kindnessRating: review.kindnessRating,
+            tasteRating: review.tasteRating,
+            category: filteredRestaurant
+              ? filteredRestaurant.category
+              : '', // 일치하는 음식점에서 업종 가져오기
+            content: review.content,
+            imageUrl: filteredRestaurant?.thumUrl,
+            companionFriends: review.accountReviews,
+            guestFriends: review.reviewPersonTags,
+            visitDate: review.visitDate,
+            locationName: filteredRestaurant
+              ? filteredRestaurant.locationName
+              : '', // 일치하는 음식점에서 위치 가져오기
           };
         });
         setMyReviewStore(reviewList);
         if (reviewListSortButton1) sortByRecentVisitDate();
         if (reviewListSortButton2) sortByVisitCount();
         if (reviewListSortButton3) sortByAverageTasteAndKindness();
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      } catch {
+        setRestaurantStore([]);
+        setMyReviewStore([]);
       }
     };
     fetchData();
@@ -229,7 +234,7 @@ function ReviewsList() {
     selectedEndDate,
     selectedBusinessTypes,
     selectedUserLocationID,
-    계정없는친구ID선택,
+    selectedGuestFriendIds,
     searchKeyWord,
     reviewListSortButton1,
     reviewListSortButton2,
@@ -297,7 +302,7 @@ function ReviewsList() {
                 );
                 setSelectedBusinessTypes([]);
                 setSelectedUserLocationID(undefined);
-                계정없는친구ID선택수정([]);
+                setSelectedGuestFriendIds([]);
                 setSearchKeyWord('');
               }}
             >
@@ -339,14 +344,15 @@ function ReviewsList() {
                   <Typography component="div">
                     <ListItemAvatar>
                       <Avatar
-                        src={restaurantStore[i]?.가게사진}
+                        src={restaurantStore[i]?.restaurantImage}
                         alt="사진"
                       />
+
                       {/* 사진 */}
                     </ListItemAvatar>
                     <span className={styles.itemInfo}>
                       <span className={styles.itemTitle}>
-                        {restaurantStore[i]?.가게이름}
+                        {restaurantStore[i]?.restaurantName}
                       </span>
                       <span>
                         <span>
@@ -357,7 +363,7 @@ function ReviewsList() {
                               color: 'rgba(29, 177, 119, 0.7)',
                             }}
                           />
-                          {restaurantStore[i].친절도}
+                          {restaurantStore[i].kindnessRating}
                         </span>
                         <span>|</span>
                         <span>
@@ -368,19 +374,19 @@ function ReviewsList() {
                               color: 'rgba(29, 177, 119, 0.7)',
                             }}
                           />
-                          {restaurantStore[i].맛}
+                          {restaurantStore[i].tasteRating}
                         </span>
                       </span>
                     </span>
                     <span className={styles.itemInfo}>
                       <span>
-                        <span>{restaurantStore[i].위치}</span>
+                        <span>{restaurantStore[i].locationName}</span>
                         <span>|</span>
-                        <span>{restaurantStore[i].업종}</span>
+                        <span>{restaurantStore[i].category}</span>
                       </span>
                       <span>
                         <span>
-                          {restaurantStore[i].방문횟수}번 방문
+                          {restaurantStore[i].visitCount}번 방문
                         </span>
                         {/* <span>|</span> */}
                         {/* <span>{restaurantStore[i].최근방문날짜}</span> */}
@@ -389,6 +395,7 @@ function ReviewsList() {
                   </Typography>
                 }
               />
+
               <Divider />
               <Routes>
                 <Route

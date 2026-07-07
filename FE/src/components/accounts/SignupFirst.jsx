@@ -28,19 +28,12 @@ const MenuProps = {
 function SignupFirst() {
   // const [gender, setGender] = useState('');
   // const [age, setAge] = useState('');
-  const {
-    setRegionInterest,
-    regionInterest,
-    age,
-    setGender,
-    setAge,
-  } = signupStore();
+  const { setRegionInterest, age, setGender, setAge } = signupStore();
   const handleChange = (event) => {
     setAge(event.target.value);
   };
 
   const getRegion = useGetRegion();
-  console.log(getRegion?.data);
 
   const defaultProps = {
     options: getRegion?.data,
@@ -65,7 +58,6 @@ function SignupFirst() {
 
   // const handleAutocompleteChange = (e) => {
   //   setRegionInterest(e.target.outerText);
-  //   console.log('로케이션', regionInterest);
   // };
 
   // 시 + 군/구 + 동/읍/면으로 바꾸면서 회원가입도 일부 수정함
@@ -74,9 +66,6 @@ function SignupFirst() {
   const handleAutocompleteChange = (e, selectedOption) => {
     setRegionInterest(selectedOption?.id); // -> 선택한 주소의 id값
     // setRegionInterest(e.target.outerText);  -> 선택한 주소의 주소명
-    console.log('event 값', e);
-    console.log('로케이션', regionInterest);
-    console.log('선택한 옵션의 키 값:', selectedOption);
   };
 
   return (
@@ -118,6 +107,7 @@ function SignupFirst() {
                   onClick={() => setGender('M')}
                   label={<span style={{ fontSize: '14px' }}>남</span>}
                 />
+
                 <FormControlLabel
                   value="F"
                   control={

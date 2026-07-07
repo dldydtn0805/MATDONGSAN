@@ -7,13 +7,14 @@ const reviewFilterStore = create((set) => ({
   setUserFriend: (value) => set({ userFriend: value }),
   selectedFriend: [],
   setSelectedFriend: (value) => set({ selectedFriend: value }),
-  계정없는친구선택: [],
-  계정없는친구선택수정: (value) => set({ 계정없는친구선택: value }),
+  selectedGuestFriends: [],
+  setSelectedGuestFriends: (value) =>
+    set({ selectedGuestFriends: value }),
   selectedFriendID: [],
   setSelectedFriendID: (value) => set({ selectedFriendID: value }),
-  계정없는친구ID선택: [],
-  계정없는친구ID선택수정: (value) =>
-    set({ 계정없는친구ID선택: value }),
+  selectedGuestFriendIds: [],
+  setSelectedGuestFriendIds: (value) =>
+    set({ selectedGuestFriendIds: value }),
   selectedStartDate: dayjs(dayjs('2024-01-01').format('YYYY-MM-DD')),
   setSelectedStartDate: (value) => set({ selectedStartDate: value }),
   selectedEndDate: dayjs(dayjs().format('YYYY-MM-DD')),
@@ -42,6 +43,7 @@ const reviewFilterStore = create((set) => ({
     { title: '카페' },
     { title: '디저트' },
   ],
+
   setBusinessTypesCategory: (value) =>
     set({ selectedEndDate: value }),
   selectedBusinessTypes: [],

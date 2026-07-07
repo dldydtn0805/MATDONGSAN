@@ -9,7 +9,6 @@ function LocationSortSelect() {
 
   const sortStateChange = (event) => {
     setRankSort(event.target.value);
-    console.log('별점 높으면 1, 낮으면 0', event.target.value);
   };
 
   return (

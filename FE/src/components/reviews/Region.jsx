@@ -8,9 +8,7 @@ function Regeion() {
         onClick={() => {
           axios
             .get('https://i10a209.p.ssafy.io/api/region')
-            .then((data) => {
-              console.log(data);
-            });
+            .then(() => undefined);
         }}
       >
         아무버튼임

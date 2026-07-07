@@ -47,10 +47,6 @@ function GlobalFilterModal() {
   const filterBtnClick = () => {
     setShowRefreshBtn(true);
     if (currentFilter === '장소' && location) {
-      console.log('별점 높은순 1', rankSort);
-      console.log('선택된 메뉴', choisedMenu);
-      console.log('지역 아이디', location);
-
       const menuCategory = [];
       for (let i = 0; i < choisedMenu.length; i += 1) {
         menuCategory.push({
@@ -68,13 +64,10 @@ function GlobalFilterModal() {
         },
       })
         .then((res) => {
-          console.log('장소 필터 검색!', res);
           setLocationFilterData(res.data);
           filterClose();
         })
-        .catch((err) => {
-          console.error('장소 필터 검색ㅠㅠ', err);
-        });
+        .catch(() => undefined);
     } else if (!location) {
       filterClose();
       swal.fire({
@@ -104,6 +97,7 @@ function GlobalFilterModal() {
         fontSize="medium"
         color="disabled"
       />
+
       <Menu
         id="filter-menu"
         MenuListProps={{
@@ -141,11 +135,11 @@ function GlobalFilterModal() {
           <div className={globalFilter.modalContainer}>
             <div className={globalFilter.btnContainer}>
               {/* <button
-                type="button"
-                className={globalFilter.unactiveBtn}
-                onClick={userTab}
+              type="button"
+              className={globalFilter.unactiveBtn}
+              onClick={userTab}
               >
-                유저
+              유저
               </button> */}
               <button
                 type="button"

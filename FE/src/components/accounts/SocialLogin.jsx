@@ -30,23 +30,18 @@ function SocialLogin() {
 
   useEffect(() => {
     const getUserData = async () => {
-      try {
-        const url = `${API_URL}/account`;
-        const response = await axios({
-          method: 'get',
-          url,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        console.log('사용자 데이터 요청 성공:', response.data);
-        setLoginAccount(response.data);
-        return response.data; // 사용자 데이터 반환
-      } catch (error) {
-        console.error('사용자 데이터 요청 실패:', error);
-        throw error;
-      }
+      const url = `${API_URL}/account`;
+      const response = await axios({
+        method: 'get',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      setLoginAccount(response.data);
+      return response.data; // 사용자 데이터 반환
     };
 
     // DB에 저장한 동산 상태 받아오기
@@ -55,7 +50,6 @@ function SocialLogin() {
         const dongsanStatusRes = await axios.get(
           `${API_URL}/comparison/${userId}`
         );
-        console.log('동산 상태!', dongsanStatusRes);
 
         if (dongsanStatusRes.data.comparisonList.length === 0) {
           dongsanStatusRes.data.comparisonList.push({
@@ -76,8 +70,8 @@ function SocialLogin() {
           'DONGSAN_LIST',
           JSON.stringify(dongsanStatusRes.data.comparisonList)
         );
-      } catch (err) {
-        console.error('동산 상태ㅠㅠ', err);
+      } catch {
+        localStorage.removeItem('DONGSAN_LIST');
       }
     };
 
@@ -86,9 +80,8 @@ function SocialLogin() {
         const userData = await getUserData(); // 사용자 데이터 받아오기
         // token 있고, 회원가입 한번도 하지 않았다면 -> 회원가입
         if (token && !userData.passed) {
-          console.log('token/passed:', token, userData.passed);
           setAccessToken(token); // 토큰 설정
-          console.log('토큰 로컬스토리지에 저장함!');
+
           localStorage.setItem('ACCESS_TOKEN', token);
           navigate('/signup', { state: location });
           Toast.fire({
@@ -98,16 +91,11 @@ function SocialLogin() {
         } else if (token && userData.passed) {
           setAccessToken(token); // 토큰 설정
           localStorage.setItem('ACCESS_TOKEN', token);
-          console.log(
-            '토큰 및 isPassed 확인:',
-            token,
-            userData.passed
-          );
+
           navigate('/main/restaurants', { state: location }); // '/main/restaurants'로 수정
         }
         return userData;
       } catch (error) {
-        console.error('사용자 데이터 요청 실패:', error);
         navigate('/');
         return error;
       }

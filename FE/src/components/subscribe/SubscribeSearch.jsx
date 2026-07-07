@@ -5,11 +5,6 @@ import search from '../../styles/subscribe/SubscribeSearch.module.css';
 
 function SubscribeSearch() {
   const [nickname, setNickname] = useState('');
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      console.log('엔터버튼 눌렀음!');
-    }
-  };
   return (
     <div className={search.wrapper}>
       <TextField
@@ -31,7 +26,6 @@ function SubscribeSearch() {
             marginRight: '30px',
           },
         }}
-        onKeyPress={handleKeyPress}
         onChange={(e) => {
           setNickname(e.target.value);
         }}
@@ -40,11 +34,7 @@ function SubscribeSearch() {
           autoComplete: 'off',
           startAdornment: (
             <InputAdornment position="start">
-              <IconButton
-                onClick={() => {
-                  console.log('검색버튼 클릭함!');
-                }}
-              >
+              <IconButton onClick={() => undefined}>
                 <SearchIcon />
               </IconButton>
             </InputAdornment>

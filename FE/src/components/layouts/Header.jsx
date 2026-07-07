@@ -65,15 +65,10 @@ function Header() {
     axios
       .get(url)
       .then((response) => {
-        console.log('유저 순위 요청 성공:', response.data);
         setAccountRank(response.data);
         // 성공 시 필요한 작업 수행
       })
-      .catch((error) => {
-        console.error('유저 순위 요청 요청 실패:', error);
-        // 실패 시 에러 처리
-      });
-    // console.log(accountRank);
+      .catch(() => undefined);
   }, []);
   const modalOpen = () => setLoginModalOpen(true);
 
@@ -120,16 +115,12 @@ function Header() {
       url: `${API_URL}/account/search?query=${e.target.value}`,
     })
       .then((res) => {
-        console.log('유저 검색!', res);
         setUserSearchInfos(res.data);
       })
-      .catch((err) => {
-        console.error('유저 검색ㅠㅠ', err);
-      });
+      .catch(() => undefined);
   };
 
   const subscribe = (userId) => {
-    console.log('클릭!', userId);
     axios({
       method: 'post',
       url: `${API_URL}/subscription/${userId}`,
@@ -137,12 +128,8 @@ function Header() {
         Authorization: `Bearer ${accessToken}`,
       },
     })
-      .then((res) => {
-        console.log('구독 성공!', res);
-      })
-      .catch((err) => {
-        console.error('구독 실패ㅠ', err);
-      });
+      .then(() => undefined)
+      .catch(() => undefined);
   };
 
   return (
@@ -177,6 +164,7 @@ function Header() {
               color="disabled"
               onClick={searchBtnClick}
             />
+
             {userOrLocation === '유저' ? (
               <input
                 type="text"
@@ -194,6 +182,7 @@ function Header() {
                 value={searchValue}
               />
             )}
+
             {userOrLocation === '유저' &&
             searchValue &&
             userSearchInfos.length !== 0 ? (
@@ -314,8 +303,9 @@ function Header() {
                   <HomeIcon fontSize="large" color="disabled" />
                 </IconButton>
               )}
+
               {/* <li>
-                <NotiModal />
+              <NotiModal />
               </li> */}
               <li>
                 <ProfileModal />
@@ -402,6 +392,7 @@ function Header() {
                       width: '1vw',
                     }}
                   />
+
                   <span>
                     {index === accountRank.length - 1
                       ? accountRank[0].follower

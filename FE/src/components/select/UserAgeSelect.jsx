@@ -9,7 +9,6 @@ function UserAgeSelect() {
 
   const ageStateChange = (event) => {
     setUserAge(event.target.value);
-    // console.log(event.target.value);
   };
 
   return (

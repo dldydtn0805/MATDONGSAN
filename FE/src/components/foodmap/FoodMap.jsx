@@ -37,8 +37,6 @@ function FoodMap() {
             return;
           }
 
-          console.log('로그인한 지도');
-
           const fetchData = async () => {
             try {
               if (
@@ -49,7 +47,7 @@ function FoodMap() {
                 const response = await axios.get(
                   `${API_URL}/naver/search/v2/?query=${query}`
                 );
-                console.log('글로벌 검색 수행 완료!', response);
+
                 const searchList = response.data;
 
                 const markers = [];
@@ -183,13 +181,12 @@ function FoodMap() {
                   }
                 );
               }
-            } catch (error) {
-              console.error('글로벌 검색 수행 중 오류 발생!', error);
+            } catch {
+              await Promise.resolve();
             }
           };
 
           const filterSearchData = () => {
-            console.log('로케이션 필터 데이터', locationFilterData);
             if (locationFilterData.length === 0) {
               return;
             }
@@ -321,12 +318,11 @@ function FoodMap() {
                 const response = await axios.get(
                   `${API_URL}/account/${dongsanUsers[i].id}`
                 );
-                console.log('유저 정보들', response);
+
                 userIds.push(response.data);
               }
               return userIds;
-            } catch (error) {
-              console.error('유저 정보 받아오기 오류', error);
+            } catch {
               return [];
             }
           };
@@ -340,12 +336,11 @@ function FoodMap() {
                 const res = await axios.get(
                   `${API_URL}/restaurant/v2/${userIds[i].id}`
                 );
-                console.log('맛집 목록들', res);
+
                 restaurantLists.push(res.data);
               }
               return { restaurantLists, userIds };
-            } catch (err) {
-              console.error('맛집 목록 받기 에러', err);
+            } catch {
               return [];
             }
           };
@@ -376,12 +371,6 @@ function FoodMap() {
                       mapDatas.restaurantLists[i][j].mapx /
                       tenPowSeven;
 
-                    console.log(
-                      `${i}행 ${j}열`,
-                      centerLat,
-                      centerLng
-                    );
-
                     // eslint-disable-next-line max-depth
                     if (centerLat !== 0 && centerLng !== 0) {
                       break;
@@ -409,7 +398,6 @@ function FoodMap() {
                   mapOptions
                 );
 
-                console.log('지도에 필요한 모든 데이터', mapDatas);
                 const markers = [];
                 const infoWindows = [];
 
@@ -420,7 +408,6 @@ function FoodMap() {
                     j < mapDatas.restaurantLists[i].length;
                     j += 1
                   ) {
-                    console.log('유저 정보', mapDatas.userIds[i]);
                     const markerContent = `
                       <div class=${markerStyle.wrapper}>
                         <img src=/assets/random/profile${mapDatas.userIds[i].picture}.png alt="프로필 사진" class=${markerStyle.imgStyle}>
@@ -471,7 +458,7 @@ function FoodMap() {
                       document.querySelector(
                         '#restaurantId'
                       ).innerText;
-                    console.log('클릭한 가게 아이디', restaurantId);
+
                     infoWindows[index].close();
                     navigate(
                       `/main/restaurants/${restaurantId}/detail`,
@@ -527,7 +514,6 @@ function FoodMap() {
               });
           }
         } else {
-          console.log('로그인 안한 지도!');
           const fetchData = async () => {
             try {
               if (
@@ -538,7 +524,7 @@ function FoodMap() {
                 const response = await axios.get(
                   `${API_URL}/naver/search/v2/?query=${query}`
                 );
-                console.log('글로벌 검색 수행 완료!', response);
+
                 const searchList = response.data;
 
                 const markers = [];
@@ -672,13 +658,12 @@ function FoodMap() {
                   }
                 );
               }
-            } catch (error) {
-              console.error('글로벌 검색 수행 중 오류 발생!', error);
+            } catch {
+              await Promise.resolve();
             }
           };
 
           const filterSearchData = () => {
-            console.log('로케이션 필터 데이터', locationFilterData);
             if (locationFilterData.length === 0) {
               return;
             }

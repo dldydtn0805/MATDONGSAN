@@ -9,7 +9,6 @@ function UserSortSelect() {
 
   const sortStateChange = (event) => {
     setUserSort(event.target.value);
-    // console.log(event.target.value);
   };
 
   return (

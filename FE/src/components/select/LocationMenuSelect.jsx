@@ -3,13 +3,11 @@ import TextField from '@mui/material/TextField';
 import globalFilterStore from '../../stores/globalFilterStore';
 
 function LocationMenuSelect() {
-  const { restaurantMenu, choisedMenu, setChoisedMenu } =
-    globalFilterStore();
+  const { restaurantMenu, setChoisedMenu } = globalFilterStore();
 
   const handleAutocompleteChange = (event, selectedOptions) => {
     // 선택된 항목을 setSelectedFriend 함수의 인자로 전달
     setChoisedMenu(selectedOptions.map((option) => option.title));
-    console.log('메뉴 선택!', choisedMenu);
   };
 
   return (

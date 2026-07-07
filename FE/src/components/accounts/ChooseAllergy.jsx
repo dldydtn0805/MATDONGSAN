@@ -23,7 +23,7 @@ import signupStore from '../../stores/signupStore';
 
 function ChooseAllergy() {
   const [selectedButtons, setSelectedButtons] = useState([]);
-  const { allergy, setAllergy } = signupStore();
+  const { setAllergy } = signupStore();
 
   const AllergyButtonClick = (buttonValue) => {
     if (selectedButtons.includes(buttonValue)) {
@@ -40,7 +40,6 @@ function ChooseAllergy() {
       setAllergy([...selectedButtons, buttonValue]);
     }
     // setAllergy(selectedButtons.join(', '));
-    console.log('알레르기:', allergy);
   };
   return (
     <div className={styles.Box}>
@@ -64,6 +63,7 @@ function ChooseAllergy() {
             alt="beaf"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>소고기</div>
         </button>
         <button
@@ -84,6 +84,7 @@ function ChooseAllergy() {
             alt="pork"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>돼지고기</div>
         </button>
         <button
@@ -104,6 +105,7 @@ function ChooseAllergy() {
             alt="chicken"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>닭고기</div>
         </button>
         <button
@@ -140,6 +142,7 @@ function ChooseAllergy() {
             alt="shrimp"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>새우</div>
         </button>
         <button
@@ -160,6 +163,7 @@ function ChooseAllergy() {
             alt="crab"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>게</div>
         </button>
         <button
@@ -180,6 +184,7 @@ function ChooseAllergy() {
             alt="squid"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>오징어</div>
         </button>
         <button
@@ -201,6 +206,7 @@ function ChooseAllergy() {
             alt="mackerel"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>고등어</div>
         </button>
         <button
@@ -222,6 +228,7 @@ function ChooseAllergy() {
             alt="shellfish"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>조개류</div>
         </button>
         <button
@@ -243,6 +250,7 @@ function ChooseAllergy() {
             alt="milk"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>우유</div>
         </button>
         <button
@@ -263,6 +271,7 @@ function ChooseAllergy() {
             alt="peanut"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>땅콩</div>
         </button>
         <button
@@ -283,6 +292,7 @@ function ChooseAllergy() {
             alt="walnut"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>호두</div>
         </button>
         <button
@@ -303,6 +313,7 @@ function ChooseAllergy() {
             alt="pinenut"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>잣</div>
         </button>
         <button
@@ -324,6 +335,7 @@ function ChooseAllergy() {
             alt="soybean"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>대두</div>
         </button>
         <button
@@ -344,6 +356,7 @@ function ChooseAllergy() {
             alt="peach"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>복숭아</div>
         </button>
         <button
@@ -364,6 +377,7 @@ function ChooseAllergy() {
             alt="tomato"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>토마토</div>
         </button>
         <button
@@ -384,6 +398,7 @@ function ChooseAllergy() {
             alt="wheat"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>밀</div>
         </button>
         <button
@@ -404,6 +419,7 @@ function ChooseAllergy() {
             alt="buckwheat"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>메밀</div>
         </button>
         <button
@@ -424,6 +440,7 @@ function ChooseAllergy() {
             alt="wine"
             className={styles.allergyImg}
           />
+
           <div className={styles.allergyName}>아황산류</div>
         </button>
 

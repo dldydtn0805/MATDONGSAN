@@ -5,10 +5,9 @@ import globalFilterStore from '../../stores/globalFilterStore';
 import locationBox from '../../styles/select/LocationSelect.module.css';
 
 function LocationSelect() {
-  const { location, setLocation } = globalFilterStore();
+  const { setLocation } = globalFilterStore();
 
   const getRegion = useGetRegion();
-  console.log(getRegion?.data);
 
   const defaultProps = {
     options: getRegion?.data,
@@ -33,9 +32,6 @@ function LocationSelect() {
 
   const handleAutocompleteChange = (e, selectedOption) => {
     setLocation(selectedOption?.id);
-    console.log('event 값', e);
-    console.log('로케이션', location);
-    console.log('선택한 옵션의 키 값:', selectedOption);
   };
 
   return (

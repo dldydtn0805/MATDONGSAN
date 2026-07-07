@@ -17,8 +17,8 @@ const reviewStore = create((set) => ({
     set((state) => ({
       // 방문횟수로 정렬
       restaurantStore: [...state.restaurantStore].sort((a, b) => {
-        const visitCountA = parseInt(a.방문횟수, 10);
-        const visitCountB = parseInt(b.방문횟수, 10);
+        const visitCountA = parseInt(a.visitCount, 10);
+        const visitCountB = parseInt(b.visitCount, 10);
         return visitCountB - visitCountA;
       }),
     }));
@@ -27,8 +27,8 @@ const reviewStore = create((set) => ({
     set((state) => ({
       // 최근방문날짜로 정렬
       restaurantStore: [...state.restaurantStore].sort((a, b) => {
-        const dateA = new Date(a.최근방문날짜);
-        const dateB = new Date(b.최근방문날짜);
+        const dateA = new Date(a.recentVisitDate);
+        const dateB = new Date(b.recentVisitDate);
         return dateB - dateA;
       }),
     }));
@@ -38,9 +38,13 @@ const reviewStore = create((set) => ({
       restaurantStore: [...state.restaurantStore].sort((a, b) => {
         // 맛과 친절도의 평균을 계산
         const avgA =
-          (parseInt(a.맛, 10) + parseInt(a.친절도, 10)) / 2;
+          (parseInt(a.tasteRating, 10) +
+            parseInt(a.kindnessRating, 10)) /
+          2;
         const avgB =
-          (parseInt(b.맛, 10) + parseInt(b.친절도, 10)) / 2;
+          (parseInt(b.tasteRating, 10) +
+            parseInt(b.kindnessRating, 10)) /
+          2;
         // 평균을 기준으로 정렬
         return avgB - avgA;
       }),

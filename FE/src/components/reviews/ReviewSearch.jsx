@@ -28,13 +28,7 @@ function ReviewsSearch() {
   // const { API_URL } = urlStore();
   // const { loginAccount } = userStore();
   const [whatIsClicked, setClicked] = useState(0);
-  const { setSearchKeyWord, searchKeyWord } = reviewFilterStore();
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      console.log('엔터버튼 눌렀음!');
-      console.log(searchKeyWord);
-    }
-  };
+  const { setSearchKeyWord } = reviewFilterStore();
   return (
     <div className={styles.wrapper}>
       <TextField
@@ -57,7 +51,6 @@ function ReviewsSearch() {
             marginRight: '30px',
           },
         }}
-        onKeyPress={handleKeyPress}
         onChange={(e) => {
           setSearchKeyWord(e.target.value);
         }}
@@ -65,31 +58,31 @@ function ReviewsSearch() {
           autoComplete: 'off',
           startAdornment: (
             <InputAdornment position="start">
-              <IconButton
-                onClick={() => {
-                  console.log(searchKeyWord);
-                }}
-              >
+              <IconButton onClick={() => undefined}>
                 <SearchIcon />
               </IconButton>
             </InputAdornment>
           ),
         }}
       />
+
       <br />
       <div className={styles.footer}>
         <ReviewsSearchTogether
           whatIsClicked={whatIsClicked}
           setClicked={setClicked}
         />
+
         <ReviewsSearchBusinessTypes
           whatIsClicked={whatIsClicked}
           setClicked={setClicked}
         />
+
         <ReviewsSearchLocation
           whatIsClicked={whatIsClicked}
           setClicked={setClicked}
         />
+
         <ReviewsSearchTime
           whatIsClicked={whatIsClicked}
           setClicked={setClicked}

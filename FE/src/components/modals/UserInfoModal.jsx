@@ -21,14 +21,10 @@ function UserInfoModal() {
     axios
       .get(url)
       .then((response) => {
-        console.log('요청 성공:', response.data);
         setUserInfo(response.data);
         // 성공 시 필요한 작업 수행
       })
-      .catch((error) => {
-        console.error('요청 실패:', error);
-        // 실패 시 에러 처리
-      });
+      .catch(() => undefined);
   }, [location, followButtonClick]);
   useEffect(() => {
     axios({
@@ -45,11 +41,8 @@ function UserInfoModal() {
         } else {
           setFollowButtonClick(false);
         }
-        console.log(response.data, '구독버튼 눌렀습니다');
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch(() => undefined);
   }, [location]);
   return (
     <div>
@@ -72,6 +65,7 @@ function UserInfoModal() {
                   width: '1vw',
                 }}
               />
+
               {userInfo?.follower}
             </div>
             <div>
@@ -80,7 +74,6 @@ function UserInfoModal() {
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    console.log('팔로우 하는 기능 만들어야함');
                     if (Number(userID) === Number(loginAccount.id)) {
                       Swal.fire({
                         icon: 'error',
@@ -98,15 +91,11 @@ function UserInfoModal() {
                         'Content-Type': 'application/json',
                       },
                     })
-                      .then((response) => {
-                        console.log('요청 성공:', response.data);
+                      .then(() => {
                         setFollowButtonClick(!followButtonClick);
                         // 성공 시 필요한 작업 수행
                       })
-                      .catch((error) => {
-                        console.error('요청 실패:', error);
-                        // 실패 시 에러 처리
-                      });
+                      .catch(() => undefined);
                   }}
                   style={{
                     backgroundColor: 'rgba(29, 177, 119, 0.7)', // 버튼의 배경색을 1db177로 설정
@@ -124,7 +113,6 @@ function UserInfoModal() {
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    console.log('팔로우 하는 기능 만들어야함');
                     axios({
                       method: 'delete',
                       url: `${API_URL}/subscription/${userID}`,
@@ -133,14 +121,10 @@ function UserInfoModal() {
                         'Content-Type': 'application/json',
                       },
                     })
-                      .then((response) => {
-                        console.log('요청 성공:', response.data);
+                      .then(() => {
                         setFollowButtonClick(!followButtonClick);
                       })
-                      .catch((error) => {
-                        console.error('요청 실패:', error);
-                        // 실패 시 에러 처리
-                      });
+                      .catch(() => undefined);
                   }}
                   style={{
                     backgroundColor: 'rgba(29, 177, 119, 0.7)', // 버튼의 배경색을 1db177로 설정
@@ -158,6 +142,7 @@ function UserInfoModal() {
           </div>
         </div>
       )}
+
       {loginAccount.id === undefined && (
         <div className={styles.box}>
           <div className={styles.avatar}>
@@ -177,6 +162,7 @@ function UserInfoModal() {
                   width: '1vw',
                 }}
               />
+
               {userInfo?.follower}
             </div>
             <div>

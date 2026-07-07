@@ -10,14 +10,14 @@ import styles from '../../styles/modals/ReviewUpdateFriendTagModal.module.css';
 
 function ReviewWriteFriendAdd(props) {
   const {
-    임의친구이름수정,
-    임의친구이름,
-    임의친구생년,
-    임의친구생년수정,
-    임의친구들,
-    임의친구들수정,
-    클릭버튼,
-    클릭버튼수정,
+    setGuestFriendName,
+    guestFriendName,
+    guestFriendBirthYear,
+    setGuestFriendBirthYear,
+    guestFriends,
+    setGuestFriends,
+    isGuestFriendModalOpen,
+    setIsGuestFriendModalOpen,
   } = props;
   return (
     <div>
@@ -39,12 +39,11 @@ function ReviewWriteFriendAdd(props) {
               },
             }}
             onChange={(e) => {
-              임의친구이름수정(e.target.value);
-              console.log(임의친구이름);
-              console.log('임의 친구 추가중입니다');
+              setGuestFriendName(e.target.value);
             }}
             color="success"
           />
+
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer
               sx={{
@@ -79,28 +78,24 @@ function ReviewWriteFriendAdd(props) {
                     color: 'rgba(29, 177, 119, 0.5)', // 텍스트가 상단으로 이동할 때의 색상
                   },
                 }}
-                value={임의친구생년}
+                value={guestFriendBirthYear}
                 onChange={(newValue) => {
-                  임의친구생년수정(newValue);
-                  if (임의친구생년)
-                    console.log('시작 날짜 변경됨!', 임의친구생년.$y);
+                  setGuestFriendBirthYear(newValue);
                 }}
               />
             </DemoContainer>
           </LocalizationProvider>
           <IconButton
             onClick={() => {
-              if (임의친구이름 && 임의친구생년) {
-                console.log('임의친구추가버튼이 클릭되었습니다!');
-                console.log(임의친구이름, 임의친구생년.$y);
-                const copy = [...임의친구들];
+              if (guestFriendName && guestFriendBirthYear) {
+                const copy = [...guestFriends];
                 copy.push({
-                  name: 임의친구이름,
-                  birthYear: String(임의친구생년.$y),
+                  name: guestFriendName,
+                  birthYear: String(guestFriendBirthYear.$y),
                 });
-                임의친구이름수정('');
-                임의친구들수정(copy);
-                클릭버튼수정(!클릭버튼);
+                setGuestFriendName('');
+                setGuestFriends(copy);
+                setIsGuestFriendModalOpen(!isGuestFriendModalOpen);
               }
             }}
             sx={{

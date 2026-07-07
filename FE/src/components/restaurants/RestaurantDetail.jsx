@@ -19,7 +19,6 @@ function RestaurantDetail() {
   const navigate = useNavigate();
   const restaurantId = location.state.id;
   const { API_URL } = urlStore();
-  // console.log(restaurantId);
   const { loginAccount } = userStore();
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
@@ -35,17 +34,14 @@ function RestaurantDetail() {
       method: 'delete',
       url: `${API_URL}/restaurant/${loginAccount.id}/${restaurantId}`,
     })
-      .then((res) => {
-        console.log('가게 삭제', res);
+      .then(() => {
         navigate(`/main/restaurants/${restaurantId}/detail`, {
           state: {
             id: restaurantId,
           },
         });
       })
-      .catch((err) => {
-        console.error('가게 삭제ㅠㅠ', err);
-      });
+      .catch(() => undefined);
   }, [API_URL, navigate, restaurantId]);
 
   const registerMyRestaurant = useCallback(() => {
@@ -61,17 +57,14 @@ function RestaurantDetail() {
         method: 'post',
         url: `${API_URL}/restaurant/${loginAccount.id}?restaurantId=${restaurantId}`,
       })
-        .then((res) => {
-          console.log('내 맛집 등록', res);
+        .then(() => {
           navigate(`/main/restaurants/${restaurantId}/detail`, {
             state: {
               id: restaurantId,
             },
           });
         })
-        .catch((err) => {
-          console.error('내 맛집 등록ㅠㅠ', err);
-        });
+        .catch(() => undefined);
     }
   }, [API_URL, navigate, restaurantId]);
 
@@ -82,7 +75,6 @@ function RestaurantDetail() {
       url: `${API_URL}/restaurant/common/v2/${restaurantId}`,
     })
       .then((res) => {
-        console.log('가게 상세 정보', res);
         setAddress(res.data.address);
         setName(res.data.name);
         setPhone(res.data.phone);
@@ -90,9 +82,7 @@ function RestaurantDetail() {
         setMenus(res.data.menuInfo);
         setCategories(res.data.restaurantFoodCategories);
       })
-      .catch((err) => {
-        console.error('가게 상세 정보 실패ㅠㅠ', err);
-      });
+      .catch(() => undefined);
 
     // 해당 가게가 내 맛집으로 저장되어있는지?
     axios({
@@ -100,17 +90,13 @@ function RestaurantDetail() {
       url: `${API_URL}/restaurant/${loginAccount.id}/${restaurantId}`,
     })
       .then((res) => {
-        console.log('내 맛집?', res);
         setIsPresent(res.data.isPresent);
       })
-      .catch((err) => {
-        console.error('내 맛집ㅠㅠ', err);
-      });
+      .catch(() => undefined);
   }, [location]);
 
   useEffect(() => {
     setMenuList(menus?.split(' | '));
-    console.log(menuList);
   }, [menus]);
 
   return (
@@ -134,6 +120,7 @@ function RestaurantDetail() {
           },
         }}
       />
+
       <div className={detail.container}>
         <div className={detail.wrapper}>
           <div className={detail.storeName}>{name}</div>

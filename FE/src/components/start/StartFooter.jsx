@@ -13,15 +13,10 @@ function StartFooter() {
     axios
       .get(url)
       .then((response) => {
-        console.log('요청 성공:', response.data);
         setAccountRank(response.data);
         // 성공 시 필요한 작업 수행
       })
-      .catch((error) => {
-        console.error('요청 실패:', error);
-        // 실패 시 에러 처리
-      });
-    console.log(accountRank);
+      .catch(() => undefined);
   }, []);
   return (
     <div className={styles.footer}>

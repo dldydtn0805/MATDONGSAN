@@ -7,11 +7,10 @@ import signupStore from '../../stores/signupStore';
 
 function SignupSecond() {
   const [selectedButton, setSelectedButton] = useState(null);
-  const { spicyLevel, setSpicyLevel } = signupStore();
+  const { setSpicyLevel } = signupStore();
   const handleButtonClick = (buttonValue) => {
     setSelectedButton(buttonValue);
     setSpicyLevel(buttonValue);
-    console.log('매운 맛:', spicyLevel);
   };
 
   return (
@@ -96,6 +95,7 @@ function SignupSecond() {
                 alt="pepperImg"
                 className={styles.twopepperImg}
               />
+
               <img
                 src={pepperImg}
                 alt="pepperImg"

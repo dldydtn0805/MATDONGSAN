@@ -31,7 +31,7 @@ export default function HorizontalNonLinearStepper() {
   const { accessToken } = userStore();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
-  console.log(age, gender, regionInterest);
+
   const totalSteps = () => steps.length;
 
   const completedSteps = () => Object.keys(completed).length;
@@ -75,7 +75,6 @@ export default function HorizontalNonLinearStepper() {
     check === 0 ? <SignupFirst /> : <SignupSecond />;
 
   const signupStep1Data = () => {
-    console.log(accessToken, '액세스토큰임!');
     const requestData1 = {
       gender,
       birthYear: age,
@@ -91,15 +90,8 @@ export default function HorizontalNonLinearStepper() {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => {
-        console.log('step1 요청 성공:', response.data);
-        // 성공 시 필요한 작업 수행
-      })
-      .catch((error) => {
-        console.error('step1 요청 실패:', error);
-        console.log(accessToken);
-        // 실패 시 에러 처리
-      });
+      .then(() => undefined)
+      .catch(() => undefined);
   };
 
   const [randomprofile, setRandomProfile] = useState('');
@@ -107,12 +99,11 @@ export default function HorizontalNonLinearStepper() {
   const randomProfile = (min, max) => {
     const randomNum =
       Math.floor(Math.random() * (max - min + 1)) + min;
-    console.log('randomNum: ', randomNum);
+
     setRandomProfile(randomNum);
   };
 
   const signupStep2Data = () => {
-    console.log(accessToken, '액세스토큰임!');
     const requestData = {
       spicyLevel,
       bannedFoodIds: allergy,
@@ -128,17 +119,8 @@ export default function HorizontalNonLinearStepper() {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => {
-        console.log('step2 요청 성공:', response.data);
-        console.log('picture 확인:', randomprofile);
-        // 성공 시 필요한 작업 수행
-      })
-      .catch((error) => {
-        console.error('step2 요청 실패:', error);
-        console.log('picture 확인:', randomprofile);
-        console.log(accessToken);
-        // 실패 시 에러 처리
-      });
+      .then(() => undefined)
+      .catch(() => undefined);
   };
 
   // 랜덤 프로필 생성
@@ -212,12 +194,12 @@ export default function HorizontalNonLinearStepper() {
             >
               {/* 이전 버튼 */}
               {/* <Button
-                // color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
+              // color="inherit"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mr: 1 }}
               >
-                이전
+              이전
               </Button> */}
 
               {/* 완료일 때 main 페이지로 이동 */}

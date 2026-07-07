@@ -43,13 +43,11 @@ function ReviewsSearchLocation(props) {
 }
 function LocationModal() {
   const {
-    userLocation,
     selectedUserLocation,
     setSelectedUserLocation,
     setSelectedUserLocationID,
   } = reviewFilterStore();
   const getRegion = useGetRegion();
-  console.log(getRegion?.data);
 
   const defaultProps = {
     options: getRegion?.data,
@@ -74,8 +72,7 @@ function LocationModal() {
 
   const handleAutocompleteChange = (e, a) => {
     setSelectedUserLocation(e.target.outerText);
-    console.log('로케이션', userLocation);
-    console.log('a', a);
+
     setSelectedUserLocationID(a?.id);
   };
   return (
@@ -135,6 +132,7 @@ function LocationModal() {
           />
         )}
       />
+
       <div className={styles.aside}>{selectedUserLocation}</div>
       <Button
         type="submit"

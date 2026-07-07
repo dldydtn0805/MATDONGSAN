@@ -47,7 +47,6 @@ function ProfileModal() {
       }
     }
 
-    console.log('동산상태 확인', comparisonList);
     localStorage.removeItem('DONGSAN_LIST');
 
     axios({
@@ -57,12 +56,8 @@ function ProfileModal() {
         comparisonList,
       },
     })
-      .then((res) => {
-        console.log('현재 동산상태 저장', res);
-      })
-      .catch((err) => {
-        console.error('현재 동산상태 저장실패ㅠㅠ', err);
-      });
+      .then(() => undefined)
+      .catch(() => undefined);
   };
 
   return (

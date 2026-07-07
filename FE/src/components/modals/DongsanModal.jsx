@@ -35,7 +35,6 @@ function DongsanModal() {
     globalFilterStore();
 
   const dongsanStatic = () => {
-    console.log('동산 상태 분석!', dongsanUsers);
     setIsHidden(true);
 
     const comparedAccountIds = [];
@@ -52,13 +51,10 @@ function DongsanModal() {
       },
     })
       .then((res) => {
-        console.log('동산 통계!', res);
         setSpicyLevel(res.data.spicyLevel);
         setBannedFoodList(res.data.bannedFoodList);
       })
-      .catch((err) => {
-        console.error('동산 통계ㅠㅠ', err);
-      });
+      .catch(() => undefined);
   };
 
   useEffect(() => {
@@ -89,12 +85,10 @@ function DongsanModal() {
       const modalList = [];
       try {
         for (let i = 0; i < dongsanList.length; i += 1) {
-          console.log('동산 상태', dongsanList[i]);
           // eslint-disable-next-line no-await-in-loop
           const response = await axios.get(
             `${API_URL}/account/${dongsanList[i].comparedAccountId}`
           );
-          console.log('동산 모달의 유저정보', response);
 
           // eslint-disable-next-line max-depth
           if (dongsanList[i].isHidden === 1) {
@@ -112,11 +106,9 @@ function DongsanModal() {
               filter: true,
             });
           }
-          console.log('동산 유저 상태', dongsanUsers);
         }
         return modalList;
-      } catch (error) {
-        console.error('유저 정보 받아오기 오류', error);
+      } catch {
         return [];
       }
     };
@@ -129,8 +121,6 @@ function DongsanModal() {
     storage.splice(index, 1);
     localStorage.setItem('DONGSAN_LIST', JSON.stringify(storage));
   };
-  console.log(dongsanUsers, '현재 동산 상태');
-  console.log('showTooltip 상태', showTooltip);
 
   const refreshBtnClick = () => {
     setShowRefreshBtn(false);
@@ -159,12 +149,14 @@ function DongsanModal() {
               },
             }}
           />
+
           <p>이 모임은 {spicyWord}</p>
           <p>{bannedFood}</p>
         </div>
       ) : (
         <div className={dongsan.none} />
       )}
+
       {loginAccount.id !== undefined && (
         <div className={dongsan.box}>
           <div className={dongsan.title}>
@@ -182,6 +174,7 @@ function DongsanModal() {
                 )}
               </div>
             )}
+
             <span>동산</span>
             <button
               type="button"
@@ -223,17 +216,17 @@ function DongsanModal() {
               <div key={dongsanUser.nickname}>
                 <div className={dongsan.profile}>
                   {/* {dongsanUser.filter ? (
-                  <VisibilityIcon
-                    onClick={() => {
-                      toggleDongsanUsersFilter(index);
-                    }}
-                  />
+                <VisibilityIcon
+                onClick={() => {
+                toggleDongsanUsersFilter(index);
+                }}
+                />
                 ) : (
-                  <VisibilityOffIcon
-                    onClick={() => {
-                      toggleDongsanUsersFilter(index);
-                    }}
-                  />
+                <VisibilityOffIcon
+                onClick={() => {
+                toggleDongsanUsersFilter(index);
+                }}
+                />
                 )} */}
 
                   <img
@@ -247,8 +240,8 @@ function DongsanModal() {
                   />
 
                   {/* <Avatar
-                  sx={{ width: 24, height: 24 }}
-                  className={dongsan.avatar}
+                sx={{ width: 24, height: 24 }}
+                className={dongsan.avatar}
                 /> */}
                   <span>{dongsanUser.nickname}</span>
                   {/* <div className={dongsan.colorCheck} /> */}
@@ -256,11 +249,8 @@ function DongsanModal() {
                     color={index !== 0 ? 'error' : 'success'}
                     className={dongsan.cancel}
                     onClick={() => {
-                      console.log(dongsanUsers, '현재동산상태');
                       const copy = [...dongsanUsers];
-                      if (index === 0) {
-                        console.log('자기자신은 삭제할 수 없습니다.');
-                      } else {
+                      if (index !== 0) {
                         setDongsanUsers(
                           copy.filter(
                             (x) => x.nickname !== dongsanUser.nickname

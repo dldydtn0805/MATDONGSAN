@@ -41,13 +41,12 @@ function FoodMapView() {
     // loginAccount,
     // setIsLogin,
   } = userStore();
-  const { setDongsanUsers, dongsanUsers } = dongsanStore();
+  const { setDongsanUsers } = dongsanStore();
   const { refresh, setRefresh } = reviewStore();
   const { userID } = useParams();
   // const loginID = loginAccount.id;
 
   useEffect(() => {
-    // console.log('로그인아이디', loginID);
     const url = `${API_URL}/account`;
     setAccessToken(localStorage.getItem('ACCESS_TOKEN'));
     axios({
@@ -60,7 +59,6 @@ function FoodMapView() {
     })
       // { id: 17, nickname: '나', follower: 513, filter: true },
       .then((response) => {
-        console.log('요청 성공:', response.data);
         setLoginAccount(response.data);
         setTimeout(() => {
           setRefresh(!refresh);
@@ -72,13 +70,10 @@ function FoodMapView() {
             filter: true,
           },
         ]);
-        console.log(dongsanUsers, '나를 동산에 추가했음');
+
         // 성공 시 필요한 작업 수행
       })
-      .catch((error) => {
-        console.error('요청 실패:', error);
-        // 실패 시 에러 처리
-      });
+      .catch(() => undefined);
     if (userID !== undefined) {
       // setCurrentPageID(userID);
       setIsMyPage(false); // 리스트목록갱신
@@ -88,10 +83,8 @@ function FoodMapView() {
     }
     // if (loginID !== undefined) {
     //   setIsLogin(true);
-    //   console.log(loginID, '로그인 함!');
     // } else {
     //   setIsLogin(false);
-    //   console.log(loginID, '로그인 안함!');
     // }
   }, [navigate]);
 
@@ -116,18 +109,22 @@ function FoodMapView() {
               path="/restaurants/:restaurantID/detail"
               element={<RestaurantDetail />}
             />
+
             <Route
               path="/restaurants/write"
               element={<ReviewRegistration />}
             />
+
             <Route
               path="/restaurants/:restaurantID/write"
               element={<ReviewRegistration />}
             />
+
             <Route
               path="/restaurants/:restaurantID/reviews/:reviewID"
               element={<ReviewDetail />}
             />
+
             <Route
               path="/restaurants/:restaurantID/reviews/:reviewID/update"
               element={<ReviewUpdate />}
