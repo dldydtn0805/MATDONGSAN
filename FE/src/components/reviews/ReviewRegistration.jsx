@@ -26,71 +26,73 @@ import angel from '../../assets/images/reviews/angel.png';
 
 function ReviewRegistration() {
   const { loginAccount } = userStore();
-  const [averageKindnessRating, setAverageKindnessRating] = useState(0);
-  const [tasteRating, setTasteRating] = useState(0);
-  const [reviewContent, setReviewContent] = useState('');
-  const [accountReviews, setAccountReviews] = useState([]);
-  const [reviewPersonTags, setReviewPersonTags] = useState('');
-  const [reviewPersonTagsBirth, setReviewPersonTagsBirth] = useState(
+  // const [가게이름, 가게이름수정] = useState('');
+  const [친절도, 친절도수정] = useState(0);
+  const [맛, 맛수정] = useState(0);
+  const [내용, 내용수정] = useState('');
+  const [같이간친구, 같이간친구수정] = useState([]);
+  const [임의친구이름, 임의친구이름수정] = useState('');
+  const [임의친구생년, 임의친구생년수정] = useState(
     dayjs(dayjs().format('YYYY-MM-DD'))
   );
-  const [visitDate, setVisitDate] = useState(
+  const [방문날짜, 방문날짜수정] = useState(
     dayjs(dayjs().format('YYYY-MM-DD'))
   );
   console.log(loginAccount);
-  const [selectedReviewPersonTags, setSelectedReviewPersonTags] = useState([]);
-  const [selectedAccountReviews, setSelectedAccountReviews] = useState([]);
-  const [totalFriends, setTotalFriends] = useState([]);
+  const [임의친구들, 임의친구들수정] = useState([]);
+  const [선택한계정친구들, 선택한계정친구들수정] = useState([]);
+  const [전체친구, 전체친구수정] = useState([]);
   const { setRefresh, refresh } = reviewStore();
   const { API_URL } = urlStore();
   useEffect(
     () => () => {
       console.log('기록페이지 언마운트 됨!'); // Axios 요청을 보내서 리뷰 리스트를 갱신할 예정입니다 (useEffect 안에 적는 코드들은 어려운 연산 / 서버에서 데이터 가져오는 작업),
       // 따라서 Dependency에 []를 넣고 unmount 됐을때 한번만 처리할 예정입니다
-      setSelectedReviewPersonTags([]);
+      임의친구들수정([]);
     },
     []
   );
   const { restaurantStore } = reviewStore();
   const { restaurantID } = useParams();
-  const [restaurantId, setRestaurantId] = useState();
+  const [레스토랑아이디, 레스토랑아이디수정] = useState();
   useEffect(() => {
     // useparams에 restaurantID가 있을 경우에 레스토랑 아이디를 할당함
     if (restaurantID !== undefined) {
-      setRestaurantId(restaurantID);
+      레스토랑아이디수정(restaurantID);
     }
   });
-  const [clickedButton, setClickedButton] = useState(false);
+  const [클릭버튼, 클릭버튼수정] = useState(false);
   const navigate = useNavigate();
   const handleAutocompleteChange = (event, selectedOptions) => {
     // 선택된 항목을 setSelectedFriend 함수의 인자로 전달
     console.log(selectedOptions);
-    setAccountReviews(
+    같이간친구수정(
       selectedOptions?.map((option) => ({
         name: option.title,
         picture: option.picture,
       }))
     );
-    setSelectedAccountReviews(
+    선택한계정친구들수정(
       selectedOptions?.map((option) => ({
         id: option.id,
       }))
     );
-    console.log(accountReviews);
+    console.log(같이간친구);
   };
   const filteredShop = restaurantStore.find(
-    (x) => x.id === Number(restaurantId)
+    (x) => x.id === Number(레스토랑아이디)
   );
 
   const restaurants = restaurantStore.map((x) => ({
-    label: x.restaurantName,
+    label: x.가게이름,
   }));
-  // console.log(restaurantId, '레스토랑ID임!');
+  // console.log(레스토랑아이디, '레스토랑ID임!');
   useEffect(() => {
     axios //
       .get(`${API_URL}/subscription/${loginAccount.id}`) // 1에서 로그인한 아이디로 수정
       .then((response) => {
-        setTotalFriends(
+        console.log('팔로워 요청 성공:', response.data);
+        전체친구수정(
           response.data?.map((x) => ({
             title: x.nickname,
             id: x.id,
@@ -101,6 +103,7 @@ function ReviewRegistration() {
       })
       .catch((error) => {
         console.error('팔로워 요청 실패:', error);
+        // 실패 시 에러 처리
       });
   }, []);
   // const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => _${letter.toLowerCase()});
@@ -118,11 +121,12 @@ function ReviewRegistration() {
                   options={restaurants.map((option) => option.label)}
                   onChange={(e, name) => {
                     const autoCompletedShop = restaurantStore.find(
-                      (x) => x.restaurantName === name
+                      (x) => x.가게이름 === name
                     );
-                    setRestaurantId(autoCompletedShop.id);
+                    레스토랑아이디수정(autoCompletedShop.id);
                     console.log(
-                      restaurantId,
+                      레스토랑아이디,
+                      '오토컴플릿에서 선택해서 기록하려고함!, params가 null임!'
                     );
                   }}
                   sx={{
@@ -142,11 +146,11 @@ function ReviewRegistration() {
                   }}
                   renderInput={(params) => (
                     // eslint-disable-next-line react/jsx-props-no-spreading
-                    <TextField {...params} label="restaurantName" />
+                    <TextField {...params} label="가게이름" />
                   )}
                 />
               ) : (
-                <div>{filteredShop?.restaurantName}</div>
+                <div>{filteredShop?.가게이름}</div>
               )}
 
               <CloseIcon
@@ -178,11 +182,11 @@ function ReviewRegistration() {
                 </Typography>
                 <Rating
                   name="simple-controlled"
-                  value={averageKindnessRating}
+                  value={친절도}
                   onChange={(event, newValue) => {
-                    setAverageKindnessRating(Number(newValue));
-                    console.log('averageKindnessRating 선택되었습니다!');
-                    console.log(averageKindnessRating);
+                    친절도수정(Number(newValue));
+                    console.log('친절도 선택되었습니다!');
+                    console.log(친절도);
                   }}
                   sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
                 />
@@ -195,21 +199,21 @@ function ReviewRegistration() {
                   component="legend"
                   sx={{ color: 'rgba(55,55,55,0.7)' }}
                 >
-                  tasteRating
+                  맛
                 </Typography>
                 <Rating
                   name="simple-controlled"
-                  value={tasteRating}
+                  value={맛}
                   onChange={(event, newValue) => {
-                    setTasteRating(Number(newValue));
-                    console.log('tasteRating 선택되었습니다!');
-                    console.log(tasteRating);
+                    맛수정(Number(newValue));
+                    console.log('맛 선택되었습니다!');
+                    console.log(맛);
                   }}
                   sx={{ color: 'rgba(29, 177, 119, 0.7)' }}
                 />
               </div>
             </div>
-            {tasteRating > 4 && averageKindnessRating > 4 && (
+            {맛 > 4 && 친절도 > 4 && (
               <div className={styles.angel}>
                 <img src={angel} alt="" width={100} />
               </div>
@@ -223,9 +227,9 @@ function ReviewRegistration() {
               className={styles.textFieldStyle}
               placeholder="당신의 이야기를 남기세요...."
               onChange={(e) => {
-                setReviewContent(e.target.value);
-                console.log(reviewContent);
-                console.log('reviewContent 수정 했습니다!');
+                내용수정(e.target.value);
+                console.log(내용);
+                console.log('내용 수정 했습니다!');
               }}
               sx={{
                 '& .MuiOutlinedInput-root': {
@@ -250,7 +254,7 @@ function ReviewRegistration() {
               <Autocomplete
                 multiple
                 id="tags-outlined"
-                options={totalFriends}
+                options={전체친구}
                 getOptionLabel={(option) => option.title}
                 size="small"
                 filterSelectedOptions
@@ -286,7 +290,7 @@ function ReviewRegistration() {
                 size="small"
                 sx={{ width: '100px' }}
                 onClick={() => {
-                  setClickedButton(!clickedButton);
+                  클릭버튼수정(!클릭버튼);
                 }}
                 style={{
                   backgroundColor: 'rgba(29, 177, 119, 0.7)', // 버튼의 배경색을 1db177로 설정
@@ -302,7 +306,7 @@ function ReviewRegistration() {
               <img src="" alt="" />
             </div>
             <div>
-              {accountReviews.map((x) => (
+              {같이간친구.map((x) => (
                 <div className={styles.content}>
                   <Avatar
                     alt="Remy Sharp"
@@ -316,16 +320,16 @@ function ReviewRegistration() {
                 </div>
               ))}
             </div>
-            {clickedButton ? (
+            {클릭버튼 ? (
               <ReviewRegistrationFriendTagModal
-                reviewPersonTags={reviewPersonTags}
-                setReviewPersonTags={setReviewPersonTags}
-                reviewPersonTagsBirth={reviewPersonTagsBirth}
-                setReviewPersonTagsBirth={setReviewPersonTagsBirth}
-                selectedReviewPersonTags={selectedReviewPersonTags}
-                setSelectedReviewPersonTags={setSelectedReviewPersonTags}
-                clickedButton={clickedButton}
-                setClickedButton={setClickedButton}
+                임의친구이름={임의친구이름}
+                임의친구이름수정={임의친구이름수정}
+                임의친구생년={임의친구생년}
+                임의친구생년수정={임의친구생년수정}
+                임의친구들={임의친구들}
+                임의친구들수정={임의친구들수정}
+                클릭버튼={클릭버튼}
+                클릭버튼수정={클릭버튼수정}
               />
             ) : null}
             <hr />
@@ -336,17 +340,17 @@ function ReviewRegistration() {
               계정 없는 친구 태그
             </Typography>
             <div className={styles.tag}>
-              {selectedReviewPersonTags.map((x, i) => (
+              {임의친구들.map((x, i) => (
                 <div key={x[i]}>
                   <span className={styles.item}>{x.name}</span>
                   <span>/</span>
                   <span>{x.birthYear}</span>
                   <IconButton
                     onClick={() => {
-                      const 수정된selectedReviewPersonTags = selectedReviewPersonTags.filter(
+                      const 수정된임의친구들 = 임의친구들.filter(
                         (y) => y.name !== x.name
                       );
-                      setSelectedReviewPersonTags(수정된selectedReviewPersonTags);
+                      임의친구들수정(수정된임의친구들);
                     }}
                   >
                     <ClearIcon />
@@ -367,11 +371,11 @@ function ReviewRegistration() {
                   <DatePicker
                     size="small"
                     label="방문 날짜"
-                    value={visitDate}
+                    value={방문날짜}
                     maxDate={dayjs(dayjs().format('YYYY-MM-DD'))}
                     onChange={(newValue) => {
-                      setVisitDate(newValue);
-                      console.log('방문 날짜 변경됨!', visitDate.$d);
+                      방문날짜수정(newValue);
+                      console.log('방문 날짜 변경됨!', 방문날짜.$d);
                     }}
                     sx={{
                       margin: '10px',
@@ -402,21 +406,23 @@ function ReviewRegistration() {
               sx={{ width: '100px' }}
               onClick={() => {
                 console.log(
-                  `${visitDate.$y}-${visitDate.$M + 1 >= 10 ? visitDate.$M + 1 : `0${visitDate.$M + 1}`}-${visitDate.$D >= 10 ? visitDate.$D : `0${visitDate.$D}`}`
+                  `${방문날짜.$y}-${방문날짜.$M + 1 >= 10 ? 방문날짜.$M + 1 : `0${방문날짜.$M + 1}`}-${방문날짜.$D >= 10 ? 방문날짜.$D : `0${방문날짜.$D}`}`
                 );
                 const requestData = {
-                  kindnessRating: averageKindnessRating,
-                  tasteRating: tasteRating,
-                  content: reviewContent,
-                  visitDate: `${visitDate.$y}-${visitDate.$M + 1 >= 10 ? visitDate.$M + 1 : `0${visitDate.$M + 1}`}-${visitDate.$D >= 10 ? visitDate.$D : `0${visitDate.$D}`}`,
-                  restaurantId: Number(restaurantId),
-                  accountReviews: selectedAccountReviews,
-                  reviewPersonTags: selectedReviewPersonTags,
+                  kindnessRating: 친절도,
+                  tasteRating: 맛,
+                  content: 내용,
+                  visitDate: `${방문날짜.$y}-${방문날짜.$M + 1 >= 10 ? 방문날짜.$M + 1 : `0${방문날짜.$M + 1}`}-${방문날짜.$D >= 10 ? 방문날짜.$D : `0${방문날짜.$D}`}`,
+                  restaurantId: Number(레스토랑아이디),
+                  accountReviews: 선택한계정친구들,
+                  reviewPersonTags: 임의친구들,
                 };
+                console.log('리뷰 전송하는 ID임!', 레스토랑아이디);
+                console.log('방문날짜 어떻게 될까!', 방문날짜);
                 setTimeout(() => {
                   setRefresh(!refresh);
                 }, 5);
-                navigate(`/main/restaurants/${restaurantId}`);
+                navigate(`/main/restaurants/${레스토랑아이디}`);
                 const url = `${API_URL}/review/${loginAccount.id}`;
                 axios
                   .post(url, requestData)
